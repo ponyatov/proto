@@ -1,7 +1,13 @@
+## @file
+## @brief zero stage implementation
 
 import sys
 try:                SRC = open(sys.argv[1]).read()
 except IndexError:  SRC = open(sys.argv[0]+'.src').read()
+
+## @defgroup sym Symbolic class system
+## @brief <a href="http://ponyatov.quora.com/On-computer-language-design-Symbolic-data-type-system">symbolic in the sense of computer algebra</a>
+## @{
 
 class Qbject:
     def __init__(self, V):
@@ -48,6 +54,45 @@ class Module(Meta): pass
 
 class Clazz(Meta): pass
 
+## @}
+
+## @defgroup lexer Syntax parser /lexer only/
+## @brief powered by PLY library (c) David Beazley <<dave@dabeaz.com>>
+## @{
+
+import ply.lex as lex
+
+## token types list:
+## all names must correspond to lowercased literal names in the @ref sym 
+tokens = ['symbol']
+
+## drop spaces
+t_ignore = ' \t\r'
+## drop comments
+t_ignore_COMMENT = r'[\#\\].*\n|\(.*\)'
+
+## increment line number
+def t_newline(t):
+    r'\n'
+    t.lexer.lineno += 1
+
+## lexer error callback
+def t_error(t): raise SyntaxError(t)
+
+## symbol /word name/
+def t_symbol(t):
+    r'[a-zA-Z0-9_\?]+'
+    t.value = Symbol(t.value) ; return t
+
+## lexer
+lexer = lex.lex()
+
+## @}
+
+## @defgroup fvm oFORTH Virtual Machine
+## @brief FORTH-inspired stack engine based on OOP /no addressable memory/
+## @{
+
 D = Stack('DATA')
 
 W = Map('FORTH') ; print
@@ -61,14 +106,27 @@ W['?'] = VM(q)
 def qq(): q(); print W ; BYE()
 W['??'] = VM(qq)
 
-import ply.lex as lex
+## @defgroup compiler Compiler
+## @brief @ref Active objects constructor, not machine code
+## @{
 
-lexer = lex.lex()
+## current definition or None in interpreter mode
+COMPILE = None
+
+## @}
+
+## @defgroup interpret Interpreter
+## @brief <b>`o`</b>bject FORTH script
+## @{
 
 def INTERPRET(SRC=''):
     lexer.input(SRC)
     while True:
         token = lexer.token()
-        
-    print 'src',SRC
+        if not token: break
+        print token
 INTERPRET(SRC)
+
+## @}
+
+## @}
