@@ -1,7 +1,7 @@
 ## @file
 ## @brief zero stage implementation
 
-import sys
+import os,sys
 ## source code
 try:                SRC = open(sys.argv[1]).read()
 except IndexError:  SRC = open(sys.argv[0]+'.src').read()
@@ -44,19 +44,23 @@ class Qbject:
     ## short header-only dump
     ## @returns string `<type:value>` 
     def head(self,prefix=''):
-        return '%s<%s:%s>' % (prefix, self.type, self.value)
+        return '%s<%s:%s> %X' % (prefix, self.type, self.value, id(self))
     ## left pad for treee output
     ## @returns string `'\\n\\t...'`
     def pad(self, N):
-        return '\n' + '\t' * N
+        return '\n' + ' ' * 4 * N
+    ## infty dump blocker
+    dumped = []
     ## full dump in tree form
     ## @returns string 
     def dump(self, depth=0, prefix=''):
         S = self.pad(depth) + self.head(prefix)
+        if self in self.dumped: return S + ' ...'
+        else:                   self.dumped.append(self)
         for i in self.attr:
             S += self.attr[i].dump(depth+1,prefix='%s = '%i)
         for j in self.nest:
-            S += i.dump(depth+1)
+            S += j.dump(depth+1)
         return S
     
 ## @defgroup prim Primitive
@@ -106,7 +110,37 @@ class Vector(Container): pass
 class Active(Qbject): pass
 
 ## **virtual machine command**: `void function(void)` works on data stack
-class VM(Active): pass
+class VM(Active):
+    def __init__(self,fn):
+        Active.__init__(self, fn.__name__)
+        self.fn = fn
+    def __call__(self): self.fn()
+
+## @}
+
+## @defgroup fileio File I/O
+## @{
+
+class IO(Qbject): pass
+
+class File(IO):
+    def __init__(self,V, mode='r'):
+        IO.__init__(self, V)
+        self['mode'] = String(mode)
+        self.fh = open(V,mode)
+
+class Dir(IO):
+    def __init__(self,V):
+        IO.__init__(self, V)
+        self['cwd'] = String(os.getcwd())
+        try: os.mkdir(self.value)
+        except OSError: pass # exists
+    def __add__(self,o):
+        if type(o) != type(''): raise TypeError
+        F = File(self.value+'/'+o, mode='w')
+        F['dir'] = self
+        self << F
+        return F
 
 ## @}
 
@@ -118,7 +152,11 @@ class VM(Active): pass
 class Meta(Qbject): pass
 
 ## sw module
-class Module(Meta): pass
+class Module(Meta):
+    def __init__(self,V):
+        Meta.__init__(self, V)
+        self['dir'] = Dir(self.value)
+        self['mk'] = self['dir'] + 'Makefile'
 
 ## class
 class Clazz(Meta): pass
@@ -153,7 +191,7 @@ def t_error(t): raise SyntaxError(t)
 ## symbol /word name/
 def t_symbol(t):
     r'[a-zA-Z0-9_\?\`]+'
-    t.value = Symbol(t.value) ; return t
+    return Symbol(t.value)
 
 ## lexer
 lexer = lex.lex()
@@ -187,6 +225,15 @@ W['??'] = VM(qq)
 
 ## @}
 
+## @defgroup metaf metaFORTH
+## @{
+
+## `MODULE ( name -- module )` create module with given name
+def MODULE(): D.push(Module(D.pop().value))
+W << MODULE
+
+## @}
+
 ## @defgroup compiler Compiler
 ## @brief @ref Active objects constructor, not machine code
 ## @{
@@ -204,16 +251,25 @@ COMPILE = None
 def WORD():
     token = lexer.token()
     if not token: return False
-    D << token ; return token
+    D << token ; return token ; print token
 W << WORD
 
 ## `FIND ( wordname -- executable )` lookup in W
-def FIND(): name = D.pop().value ; D << W[name]
+def FIND():
+    name = D.pop().value
+    try: D << W.attr[name]
+    except KeyError:
+        try: D << W.attr[name.upper()]
+        except KeyError: raise SyntaxError(name)
 W << FIND
+
+## `EXECUTE ( executable -- )` execute object from stack
+def EXECUTE(): D.pop()()
+W << EXECUTE
 
 ## `\` ( -- wordname )` quote next syntax item as symbol without lookup
 def quote(): WORD()
-W['`'] = VM(quote) ; print W
+W['`'] = VM(quote)
 
 ## `INTERPRET ( -- )` process source code
 ## @param[in] SRC from string
@@ -224,6 +280,7 @@ def INTERPRET(SRC=''):
         FIND()
         EXECUTE()
 W << INTERPRET
+
 INTERPRET(SRC)
 
 ## @}
