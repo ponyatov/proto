@@ -250,7 +250,7 @@ W['?'] = VM(q)
 def qq(): q(); print W ; BYE()
 W['??'] = VM(qq)
 
-## ` . ( .. -- )` clean data stack (use at end of every code block)
+## `.` clean data stack (use at end of every code block)
 def dot(): D.clean()
 W['.'] = VM(dot)
 
