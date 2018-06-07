@@ -21,6 +21,10 @@ class Qbject:
         self.value = V
         ## `attr{}`ibutes /associative array/
         self.attr = {}
+        ## init `nest[]`
+        self.clean()
+    ## clean `nest[]`
+    def clean(self):
         ## storage for `nest[]`ed elements /ordered/
         self.nest = []
     ## `object[key]` operator: **lookup** in `attr{}`ibutes
@@ -88,6 +92,12 @@ class String(Primitive): pass
 ## objects targeted for data holding
 class Container(Qbject): pass
 
+## variable
+class Var(Container): pass
+
+## constant
+class Const(Var): pass
+
 ## LIFO stack
 class Stack(Container): pass
 
@@ -111,30 +121,43 @@ class Active(Qbject): pass
 
 ## **virtual machine command**: `void function(void)` works on data stack
 class VM(Active):
+    ## wrap given VM command function 
     def __init__(self,fn):
         Active.__init__(self, fn.__name__)
+        ## wrap file handler
         self.fn = fn
+    ## execute VM command
     def __call__(self): self.fn()
 
 ## @}
 
 ## @defgroup fileio File I/O
+## @brief reduced support for file writing (for code autogen) 
 ## @{
 
+## I/O
 class IO(Qbject): pass
 
+## File
 class File(IO):
+    ## open/create file
+    ## @param[in] mode r/w
+    ## @param[in] V file name
     def __init__(self,V, mode='r'):
         IO.__init__(self, V)
         self['mode'] = String(mode)
+        ## wrap file
         self.fh = open(V,mode)
 
+## Directory
 class Dir(IO):
+    ## create directory
     def __init__(self,V):
         IO.__init__(self, V)
         self['cwd'] = String(os.getcwd())
         try: os.mkdir(self.value)
         except OSError: pass # exists
+    ## operator `dir+str -> file`
     def __add__(self,o):
         if type(o) != type(''): raise TypeError
         F = File(self.value+'/'+o, mode='w')
@@ -153,10 +176,13 @@ class Meta(Qbject): pass
 
 ## sw module
 class Module(Meta):
+    ## construct module
     def __init__(self,V):
         Meta.__init__(self, V)
-        self['dir'] = Dir(self.value)
-        self['mk'] = self['dir'] + 'Makefile'
+        self['dir']     = Dir(self.value)
+        self['mk']      = self['dir'] + 'Makefile'
+        self['README']  = self['dir'] + 'README.md'
+        self['py']      = self['dir'] + '%s.py' % self.value
 
 ## class
 class Clazz(Meta): pass
@@ -190,7 +216,7 @@ def t_error(t): raise SyntaxError(t)
 
 ## symbol /word name/
 def t_symbol(t):
-    r'[a-zA-Z0-9_\?\`]+'
+    r'[a-zA-Z0-9_\?\`\.]+'
     return Symbol(t.value)
 
 ## lexer
@@ -213,6 +239,7 @@ def BYE(): sys.exit(0)
 W << BYE 
 
 ## @defgroup debug Debug
+## @brief minimal debug (stack/vocabulary dump)
 ## @{
 
 ## `? ( -- )` dump data stack
@@ -223,9 +250,14 @@ W['?'] = VM(q)
 def qq(): q(); print W ; BYE()
 W['??'] = VM(qq)
 
+## ` . ( .. -- )` clean data stack (use at end of every code block)
+def dot(): D.clean()
+W['.'] = VM(dot)
+
 ## @}
 
 ## @defgroup metaf metaFORTH
+## @brief FORTH extenstion for metaprogramming
 ## @{
 
 ## `MODULE ( name -- module )` create module with given name
@@ -237,6 +269,10 @@ W << MODULE
 ## @defgroup compiler Compiler
 ## @brief @ref Active objects constructor, not machine code
 ## @{
+
+## `DEF ( object -- )` usage `def NewName` define new vocabulary item for object 
+def DEF(): WORD() ; name = D.pop().value ; W[name] = D.pop()
+W << DEF
 
 ## current definition or None in interpreter mode
 COMPILE = None
