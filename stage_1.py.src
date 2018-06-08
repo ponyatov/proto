@@ -1,5 +1,10 @@
 ### prototype knowledge database implementation
+### stage 1: meta codegenerator -> stage_2.py
 
-` stage_2.py w/o file def S2
+'proto' def MODULE
+'prototype knowledge database implementation' def TITLE
 
-??
+` stage_2.py file def S2					\ create target file 
+
+'## @file' S2								\ \ write header
+'## @brief ' TITLE + ' /stage 1/' + S2		\ /

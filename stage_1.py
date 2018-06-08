@@ -23,16 +23,14 @@ class Qbject:
         self.attr = {}
         ## init `nest[]`
         self.clean()
-    ## clean `nest[]`
-    def clean(self):
-        ## storage for `nest[]`ed elements /ordered/
-        self.nest = []
+        
     ## `object[key]` operator: **lookup** in `attr{}`ibutes
     def __getitem__(self,key):
         return self.attr[key]
     ## `container[key]=object` opertor: **store to object** by attribute key 
     def __setitem__(self,key,o):
         self.attr[key] = o ; return self
+        
     ## `<<` operator: pushes objects 
     def __lshift__(self,o):
         return self.push(o)
@@ -42,6 +40,14 @@ class Qbject:
     ## pop from `nest[]` as stack
     def pop(self):
         return self.nest.pop()
+    ## top element without pop
+    def top(self):
+        return self.nest[-1]
+    ## clean `nest[]`
+    def clean(self):
+        ## storage for `nest[]`ed elements /ordered/
+        self.nest = []
+    
     ## `print object` operator
     def __repr__(self):
         return self.dump()
@@ -83,7 +89,9 @@ class Symbol(Primitive): pass
 class Number(Primitive): pass
 
 ## `'string'`
-class String(Primitive): pass
+class String(Primitive):
+    ## + operator
+    def __add__(self,o): return String(self.value + o.value)
 
 ## @}
 
@@ -142,14 +150,15 @@ class IO(Qbject): pass
 
 ## File
 class File(IO):
-    ## open/create file
-    ## @param[in] mode r/w
+    ## create file for write only
     ## @param[in] V file name
-    def __init__(self,V, mode):
+    def __init__(self,V):
         IO.__init__(self, V)
-        self['mode'] = String(mode)
-        ## wrap file
-        self.fh = open(V,mode)
+        ## wrap file (write only)
+        self.fh = open(V,'w')
+    ## callable: write top element from stack
+    def __call__(self):
+        print >>self.fh,D.pop().value
 
 ## Directory
 class Dir(IO):
@@ -172,7 +181,32 @@ import ply.lex as lex
 
 ## token types list:
 ## all names must correspond to lowercased literal names in the @ref sym 
-tokens = ['symbol']
+tokens = ['symbol','string']
+
+## extra lexer states
+states = (('string','exclusive'),)
+
+## ignore chars in `<string>` state
+t_string_ignore = ''
+
+## start string token
+def t_string(t):
+    r'\''
+    t.lexer.lexstring = ''
+    t.lexer.push_state('string')
+## finish string token
+def t_string_string(t):
+    r'\''
+    t.lexer.pop_state()
+    return String(t.lexer.lexstring)
+## newline in string depricated
+def t_string_newline(t):
+    r'\n'
+    raise SyntaxError(t)
+## any char in string
+def t_string_char(t):
+    r'.'
+    t.lexer.lexstring += t.value
 
 ## drop spaces
 t_ignore = ' \t\r'
@@ -185,7 +219,7 @@ def t_newline(t):
     t.lexer.lineno += 1
 
 ## lexer error callback
-def t_error(t): raise SyntaxError(t)
+def t_ANY_error(t): raise SyntaxError(t)
 
 ## symbol /word name/
 def t_symbol(t):
@@ -201,11 +235,25 @@ lexer = lex.lex()
 ## @brief FORTH-inspired stack engine based on OOP /no addressable memory/
 ## @{
 
-## data stack
-D = Stack('DATA')
+## @defgroup voc Vocabulary
+## @{
 
 ## main vocabulary
 W = Map('FORTH')
+
+## @}
+
+## @defgroup stack Data stack and base operators
+## @{
+
+## data stack
+D = Stack('DATA')
+
+## `+ ( o1 o2 --> o1+o2)` operator
+def add(): o2 = D.pop() ; o1 = D.pop() ; D << o1 + o2
+W['+'] = VM(add)
+
+## @}
 
 ## `BYE ( -- )` stop the whole system
 def BYE(): sys.exit(0)
@@ -237,9 +285,7 @@ W['r/o'] = String('r')
 W['w/o'] = String('w')
 
 ## `FILE ( name mode -- file )` open file, `mode = r/o w/o r/w`
-def FILE():
-    mode = D.pop().value ; name = D.pop().value
-    D << File(name,mode)
+def FILE(): D << File(D.pop().value)
 W << FILE
 
 ## @}
@@ -290,8 +336,8 @@ W['`'] = VM(quote)
 def INTERPRET(SRC=''):
     lexer.input(SRC)
     while True:
-        if not WORD(): break;   ## end of source
-        FIND()
+        if not WORD(): break;                   ## end of source
+        if D.top().type in ['symbol']: FIND()   ## searchable 
         EXECUTE()
 W << INTERPRET
 
