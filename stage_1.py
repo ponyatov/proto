@@ -72,7 +72,9 @@ class Qbject:
 ## @{
 
 ## primitive machine-level types
-class Primitive(Qbject): pass
+class Primitive(Qbject):
+    ## all primitive has clue propertiy: it evaluates into itself
+    def __call__(self): D << self 
 
 ## symbol/atom
 class Symbol(Primitive): pass
@@ -143,7 +145,7 @@ class File(IO):
     ## open/create file
     ## @param[in] mode r/w
     ## @param[in] V file name
-    def __init__(self,V, mode='r'):
+    def __init__(self,V, mode):
         IO.__init__(self, V)
         self['mode'] = String(mode)
         ## wrap file
@@ -157,35 +159,6 @@ class Dir(IO):
         self['cwd'] = String(os.getcwd())
         try: os.mkdir(self.value)
         except OSError: pass # exists
-    ## operator `dir+str -> file`
-    def __add__(self,o):
-        if type(o) != type(''): raise TypeError
-        F = File(self.value+'/'+o, mode='w')
-        F['dir'] = self
-        self << F
-        return F
-
-## @}
-
-## @defgroup meta Meta
-## @brief metaprogramming elements (deploy, db schemes and software structure)
-## @{
-
-## metaprogramming elements (deploy, db schemes and software structure)
-class Meta(Qbject): pass
-
-## sw module
-class Module(Meta):
-    ## construct module
-    def __init__(self,V):
-        Meta.__init__(self, V)
-        self['dir']     = Dir(self.value)
-        self['mk']      = self['dir'] + 'Makefile'
-        self['README']  = self['dir'] + 'README.md'
-        self['py']      = self['dir'] + '%s.py' % self.value
-
-## class
-class Clazz(Meta): pass
 
 ## @}
 
@@ -216,7 +189,7 @@ def t_error(t): raise SyntaxError(t)
 
 ## symbol /word name/
 def t_symbol(t):
-    r'[a-zA-Z0-9_\?\`\.]+'
+    r'[a-zA-Z0-9_\?\`\.\+\-\*\/]+'
     return Symbol(t.value)
 
 ## lexer
@@ -256,13 +229,18 @@ W['.'] = VM(dot)
 
 ## @}
 
-## @defgroup metaf metaFORTH
-## @brief FORTH extenstion for metaprogramming
+## @defgroup io File I/O
+## minimal i/o for target files writing
 ## @{
 
-## `MODULE ( name -- module )` create module with given name
-def MODULE(): D.push(Module(D.pop().value))
-W << MODULE
+W['r/o'] = String('r')
+W['w/o'] = String('w')
+
+## `FILE ( name mode -- file )` open file, `mode = r/o w/o r/w`
+def FILE():
+    mode = D.pop().value ; name = D.pop().value
+    D << File(name,mode)
+W << FILE
 
 ## @}
 
