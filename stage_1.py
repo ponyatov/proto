@@ -1,6 +1,10 @@
 ## @file
 ## @brief zero stage implementation
 
+## @defgroup stage1 Stage 1 
+## @brief minimal codegenerator -> stage_2.py
+## @{
+
 import os,sys
 ## source code
 try:                SRC = open(sys.argv[1]).read()
@@ -14,11 +18,13 @@ except IndexError:  SRC = open(sys.argv[0]+'.src').read()
 class Qbject:
     ## construct as `<type:value>` pair 
     ## **universal object can hold nested elements**
-    def __init__(self, V):
+    def __init__(self, V, immed=False):
         ## object type
         self.type = self.__class__.__name__.lower()
         ## single value
         self.value = V
+        ## immediate flag
+        self.immed = immed
         ## `attr{}`ibutes /associative array/
         self.attr = {}
         ## init `nest[]`
@@ -73,6 +79,9 @@ class Qbject:
             S += j.dump(depth+1)
         return S
     
+    ## python code generator
+    def py(self): return str(self.value)
+    
 ## @defgroup prim Primitive
 ## @brief primitive machine-level types
 ## @{
@@ -118,7 +127,15 @@ class Map(Container):
         self.attr[fn.__name__] = VM(fn) ; return self
         
 ## ordered vector
-class Vector(Container): pass
+class Vector(Container):
+    ## vector can has empty name
+    def __init__(self,V=''): Container.__init__(self, V)
+    ## .py code generator
+    def py(self):
+        S = '['
+        for i in self.nest: S += i.py() + ','
+        if self.nest: S = S[:-1]
+        return S + ']'
 
 ## @}
 
@@ -132,8 +149,8 @@ class Active(Qbject): pass
 ## **virtual machine command**: `void function(void)` works on data stack
 class VM(Active):
     ## wrap given VM command function 
-    def __init__(self,fn):
-        Active.__init__(self, fn.__name__)
+    def __init__(self,fn,immed=False):
+        Active.__init__(self, fn.__name__, immed)
         ## wrap file handler
         self.fn = fn
     ## execute VM command
@@ -141,7 +158,7 @@ class VM(Active):
 
 ## @}
 
-## @defgroup fileio File I/O
+## @defgroup io IO
 ## @brief reduced support for file writing (for code autogen) 
 ## @{
 
@@ -158,7 +175,7 @@ class File(IO):
         self.fh = open(V,'w')
     ## callable: write top element from stack
     def __call__(self):
-        print >>self.fh,D.pop().value
+        print >>self.fh,D.pop().py()
 
 ## Directory
 class Dir(IO):
@@ -223,7 +240,7 @@ def t_ANY_error(t): raise SyntaxError(t)
 
 ## symbol /word name/
 def t_symbol(t):
-    r'[a-zA-Z0-9_\?\`\.\+\-\*\/]+'
+    r'[a-zA-Z0-9_\?\.\+\-\*\/\[\]\{\}\~]+'
     return Symbol(t.value)
 
 ## lexer
@@ -265,11 +282,11 @@ W << BYE
 
 ## `? ( -- )` dump data stack
 def q(): print D
-W['?'] = VM(q)
+W['?'] = VM(q,immed=True)
 
 ## `?? ( -- )` dump state and exit
-def qq(): q(); print W ; BYE()
-W['??'] = VM(qq)
+def qq(): q(); print W ; print '\nCOMPILE',COMPILE ; BYE()
+W['??'] = VM(qq,immed=True)
 
 ## `.` clean data stack (use at end of every code block)
 def dot(): D.clean()
@@ -277,7 +294,7 @@ W['.'] = VM(dot)
 
 ## @}
 
-## @defgroup io File I/O
+## @defgroup fileio File I/O
 ## minimal i/o for target files writing
 ## @{
 
@@ -298,8 +315,15 @@ W << FILE
 def DEF(): WORD() ; name = D.pop().value ; W[name] = D.pop()
 W << DEF
 
-## current definition or None in interpreter mode
-COMPILE = None
+## current definition or [] in interpreter mode
+COMPILE = []
+
+## `[` start vector compilation
+def lq(): COMPILE.append( Vector() )
+W['['] = VM(lq)
+## `]` finish vector compilation
+def rq(): D << COMPILE.pop() 
+W[']'] = VM(rq,immed=True)
 
 ## @}
 
@@ -328,8 +352,10 @@ def EXECUTE(): D.pop()()
 W << EXECUTE
 
 ## `\` ( -- wordname )` quote next syntax item as symbol without lookup
-def quote(): WORD()
-W['`'] = VM(quote)
+def quote():
+    WORD()
+    if COMPILE: COMPILE[0] << D.pop()
+W['~'] = VM(quote,immed=True)
 
 ## `INTERPRET ( -- )` process source code
 ## @param[in] SRC from string
@@ -337,11 +363,14 @@ def INTERPRET(SRC=''):
     lexer.input(SRC)
     while True:
         if not WORD(): break;                   ## end of source
-        if D.top().type in ['symbol']: FIND()   ## searchable 
-        EXECUTE()
+        if D.top().type in ['symbol']: FIND()   ## searchable
+        if COMPILE and not D.top().immed:
+                COMPILE[0] << D.pop()           ## compilation state
+        else:   EXECUTE()                       ## interpretation state
 W << INTERPRET
-
 INTERPRET(SRC)
+
+## @}
 
 ## @}
 
