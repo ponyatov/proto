@@ -1,8 +1,8 @@
 ## @file
 ## @brief zero stage implementation
 
-## @defgroup stage1 Stage 1 
-## @brief minimal codegenerator -> stage_2.py
+## @defgroup stage0 Stage 0 
+## @brief minimal codegenerator S0 -> S1.py
 ## @{
 
 import os,sys
@@ -104,6 +104,11 @@ class Integer(Number):
     def __init__(self,V): Primitive.__init__(self,int(V))
     ## `+` operator
     def __add__(self,o): return Integer(self.value + o.value)
+    
+## machine hex
+class Hex(Integer): pass
+## machine binary
+class Bin(Integer): pass
 
 ## `'string'`
 class String(Primitive):
@@ -154,8 +159,10 @@ class Vector(Container):
 ## objects with **executable semantics**
 class Active(Qbject): pass
 
+## function
+class Function(Active): pass
 ## **virtual machine command**: `void function(void)` works on data stack
-class VM(Active):
+class VM(Function):
     ## wrap given VM command function 
     def __init__(self,fn,immed=False):
         Active.__init__(self, fn.__name__, immed)
@@ -163,6 +170,11 @@ class VM(Active):
         self.fn = fn
     ## execute VM command
     def __call__(self): self.fn()
+
+## class definition/constructor    
+class Clazz(Active): pass
+## class method
+class Method(Function): pass
 
 ## @}
 
