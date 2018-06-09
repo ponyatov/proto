@@ -7,8 +7,7 @@
 
 import os,sys
 ## source code
-try:                SRC = open(sys.argv[1]).read()
-except IndexError:  SRC = open(sys.argv[0]+'.src').read()
+SRC = open(sys.argv[0]+'.src','r').read()
 
 ## @defgroup sym Symbolic class system
 ## @brief <a href="http://ponyatov.quora.com/On-computer-language-design-Symbolic-data-type-system">symbolic in the sense of computer algebra</a>
@@ -60,7 +59,9 @@ class Qbject:
     ## short header-only dump
     ## @returns string `<type:value>` 
     def head(self,prefix=''):
-        return '%s<%s:%s> %X' % (prefix, self.type, self.value, id(self))
+        return '%s<%s:%s> %X' % (prefix, self.type, self.str(), id(self))
+    ## get str(self)
+    def str(self): return str(self.value)
     ## left pad for treee output
     ## @returns string `'\\n\\t...'`
     def pad(self, N):
@@ -97,10 +98,17 @@ class Symbol(Primitive): pass
 ## number
 class Number(Primitive): pass
 
+## integer
+class Integer(Number):
+    ## construct integer 
+    def __init__(self,V): Primitive.__init__(self,int(V))
+    ## `+` operator
+    def __add__(self,o): return Integer(self.value + o.value)
+
 ## `'string'`
 class String(Primitive):
     ## + operator
-    def __add__(self,o): return String(self.value + o.value)
+    def __add__(self,o): return String(self.value + o.str())
 
 ## @}
 
@@ -198,7 +206,7 @@ import ply.lex as lex
 
 ## token types list:
 ## all names must correspond to lowercased literal names in the @ref sym 
-tokens = ['symbol','string']
+tokens = ['symbol','string','integer']
 
 ## extra lexer states
 states = (('string','exclusive'),)
@@ -237,6 +245,11 @@ def t_newline(t):
 
 ## lexer error callback
 def t_ANY_error(t): raise SyntaxError(t)
+
+## number parsing
+def t_integer(t):
+    r'[0-9]+'
+    return Integer(t.value)
 
 ## symbol /word name/
 def t_symbol(t):
@@ -285,7 +298,7 @@ def q(): print D
 W['?'] = VM(q,immed=True)
 
 ## `?? ( -- )` dump state and exit
-def qq(): q(); print W ; print '\nCOMPILE',COMPILE ; BYE()
+def qq(): print W ; print '\nCOMPILE',COMPILE ; q() ; BYE()
 W['??'] = VM(qq,immed=True)
 
 ## `.` clean data stack (use at end of every code block)
@@ -304,6 +317,13 @@ W['w/o'] = String('w')
 ## `FILE ( name mode -- file )` open file, `mode = r/o w/o r/w`
 def FILE(): D << File(D.pop().value)
 W << FILE
+
+## @}
+
+## @defgroup meta Meta
+## @{
+
+W['STAGE'] = Integer(0)
 
 ## @}
 
@@ -344,7 +364,7 @@ def FIND():
     try: D << W.attr[name]
     except KeyError:
         try: D << W.attr[name.upper()]
-        except KeyError: raise SyntaxError(name)
+        except KeyError: raise KeyError(name)
 W << FIND
 
 ## `EXECUTE ( executable -- )` execute object from stack
