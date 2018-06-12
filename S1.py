@@ -52,6 +52,12 @@ class Primitive(Qbject): pass
 
 class Symbol(Primitive): pass
 
+class String(Primitive): pass
+
+class Number(Primitive): pass
+
+class Integer(Number): pass
+
 ## @}
 
 ## @defgroup s1container Container
@@ -84,9 +90,48 @@ class Operator(Qbject): pass
 ## @}
 
 ## @defgroup s1fvm oFORTH Virtual Machine
+
+## vocabulary
+W = Map('FORTH')
+
 ## @{
 
 ## @}
+
+## @defgroup s2meta Metainfo
+## @{
+
+## short module name
+MODULE  = 'proto'
+## short info about module (oneliner)
+TITLE   = 'prototype knowledge database implementation'
+## author
+AUTHOR  = 'Dmitry Ponyatov <<dponyatov@gmail.com>>'
+## licence info
+LICENCE = 'All rights reserved'
+## github repo
+GITHUB  = 'https://github.com/ponyatov/proto'
+## manual
+MANUAL  = 'Quora blog: http://www.quora.com/profile/Dmitry-Ponyatov/all_posts'
+README  = '''
+# %s
+### %s
+
+(c) %s %s
+
+github: %s
+manual: %s
+'''%(MODULE,TITLE,AUTHOR,LICENCE,GITHUB,MANUAL)
+
+W['MODULE']  = String(MODULE)
+W['TITLE']   = String(TITLE)
+W['AUTHOR']  = String(AUTHOR)
+W['LICENCE'] = String(LICENCE)
+W['GITHUB']  = String(GITHUB)
+W['MANUAL']  = String(MANUAL)
+W['README']  = String(README)
+
+## @} 
 
 ## @defgroup s1gui GUI
 ## @brief light set of GUI view/controllers and micro/IDE
@@ -103,7 +148,7 @@ class Frame(GUI):
     def __init__(self,V):
         GUI.__init__(self, V)
         ## wrapped wxframe
-        self.frame = wx.Frame(None,title=V) ; self.frame.Show()
+        self.frame = wx.Frame(None,title=V)
 
 ## menu        
 class Menu(GUI):
@@ -141,6 +186,9 @@ class Editor(GUI):
         frame = self['frame'] = Frame(V)
         menu = self['menu'] = Menu(frame)
         frame.frame.Bind(wx.EVT_MENU,self.onClose,menu.quit)
+        frame.frame.Bind(wx.EVT_MENU,self.onVoc,menu.voc)
+        frame.frame.Bind(wx.EVT_MENU,self.onStack,menu.stack)
+        frame.frame.Bind(wx.EVT_MENU,lambda e:wx.MessageBox(README),menu.about)
         ## wx.StyledTextEditor wrapper
         self.editor = wx.stc.StyledTextCtrl(frame.frame)
         ## set default styling in editor
@@ -148,11 +196,25 @@ class Editor(GUI):
         self.editor.StyleSetSpec(wx.stc.STC_STYLE_DEFAULT,
                         'face:%s,size:%s' % (font.FaceName, font.PointSize))
         self.onLoad()
+    def Show(self): self['frame'].frame.Show()
+    def onVoc(self,event):
+        F = wxVoc['frame'].frame
+        if F.IsShown(): F.Hide()
+        else:           F.Show()
+    def onStack(self,event):
+        F = wxStack['frame'].frame
+        if F.IsShown(): F.Hide()
+        else:           F.Show()
     ## event on editor exit
-    def onClose(self,event): self['frame'].frame.Close()
+    def onClose(self,event):
+        wxMain['frame'].frame.Close()
+        wxVoc['frame'].frame.Close()
+        wxStack['frame'].frame.Close()
     ## event on editor start (load file from window title)
     def onLoad(self):
-        F = open(self.value,'r') ; self.editor.SetValue(F.read()) ; F.close()
+        try:
+            F = open(self.value,'r') ; self.editor.SetValue(F.read()) ; F.close()
+        except: pass
 
 ## @}
 
@@ -168,6 +230,8 @@ displaY = wx.GetDisplaySizeMM()[1]
 font = wx.Font(displaY / 0x10,
                wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
 
-print Editor(sys.argv[0]+'.src')
+wxMain  = Editor(sys.argv[0]+'.src') ; wxMain.Show()
+wxVoc   = Editor(sys.argv[0]+'.words')
+wxStack = Editor(sys.argv[0]+'.stack')
 
 wxapp.MainLoop()
