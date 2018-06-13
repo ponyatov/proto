@@ -91,6 +91,9 @@ class Operator(Qbject): pass
 
 ## @defgroup s1fvm oFORTH Virtual Machine
 
+## data stack
+D = Stack('DATA')
+
 ## vocabulary
 W = Map('FORTH')
 
@@ -149,6 +152,7 @@ class Frame(GUI):
         GUI.__init__(self, V)
         ## wrapped wxframe
         self.frame = wx.Frame(None,title=V)
+    def Close(self): self.frame.Close()
 
 ## menu        
 class Menu(GUI):
@@ -177,44 +181,64 @@ class Menu(GUI):
         ## help/about
         self.about = self.help.Append(wx.ID_ABOUT,'&About\tF1')
         
-## editor (base GUI widget in micro IDE)
+## editor widget (Scintilla wrapper)
 class Editor(GUI):
+    ## @param[in] V file name
+    ## @param[in] frame parent Frame instance
+    def __init__(self,V,frame):
+        GUI.__init__(self, V)
+        self['frame'] = Frame(V)
+        self.editor = wx.stc.StyledTextCtrl(frame.frame)
+        ## set default styling in editor
+        self.editor.SetTabWidth(4)
+        self.editor.StyleSetSpec(wx.stc.STC_STYLE_DEFAULT,
+                        'face:%s,size:%s' % (font.FaceName, font.PointSize))
+    def SetValue(self,value): self.editor.SetValue(value)
+        
+## IDE window (base GUI widget in micro IDE)
+class IDE(GUI):
     ## construct editor
     ## @param[in] V with given file name (and title)
     def __init__(self,V):
         GUI.__init__(self, V)
         frame = self['frame'] = Frame(V)
         menu = self['menu'] = Menu(frame)
+        ## styled editor
+        self['editor'] = Editor(V,frame)
+        self.onLoad()
+        ## menu/key bindings
         frame.frame.Bind(wx.EVT_MENU,self.onClose,menu.quit)
         frame.frame.Bind(wx.EVT_MENU,self.onVoc,menu.voc)
         frame.frame.Bind(wx.EVT_MENU,self.onStack,menu.stack)
+        frame.frame.Bind(wx.EVT_MENU,self.onUpdate,menu.update)
         frame.frame.Bind(wx.EVT_MENU,lambda e:wx.MessageBox(README),menu.about)
-        ## wx.StyledTextEditor wrapper
-        self.editor = wx.stc.StyledTextCtrl(frame.frame)
-        ## set default styling in editor
-        self.editor.SetTabWidth(4)
-        self.editor.StyleSetSpec(wx.stc.STC_STYLE_DEFAULT,
-                        'face:%s,size:%s' % (font.FaceName, font.PointSize))
-        self.onLoad()
     def Show(self): self['frame'].frame.Show()
+    ## editor visible
+    def isVisible(self): return self['frame'].frame.IsShown()
+    ## update callback [F12]
+    def onUpdate(self,event):
+        if   wxVoc.isVisible():   wxVoc['editor'].editor.SetValue(W.dump())
+        if wxStack.isVisible(): wxStack['editor'].editor.SetValue(D.dump())
     def onVoc(self,event):
         F = wxVoc['frame'].frame
         if F.IsShown(): F.Hide()
-        else:           F.Show()
+        else:           F.Show() ; self.onUpdate(event)
     def onStack(self,event):
         F = wxStack['frame'].frame
         if F.IsShown(): F.Hide()
-        else:           F.Show()
+        else:           F.Show() ; self.onUpdate(event)
+    ## close editor
+    def Close(self): self['frame'].frame.Close()
     ## event on editor exit
     def onClose(self,event):
-        wxMain['frame'].frame.Close()
-        wxVoc['frame'].frame.Close()
-        wxStack['frame'].frame.Close()
+        wxMain['frame'].Close()
+        wxVoc['frame'].Close()
+        wxStack['frame'].Close()
     ## event on editor start (load file from window title)
     def onLoad(self):
-        try:
-            F = open(self.value,'r') ; self.editor.SetValue(F.read()) ; F.close()
-        except: pass
+        try: F = open(self.value,'r')
+        except IOError: return
+        self['editor'].SetValue(F.read()) ; F.close()
 
 ## @}
 
@@ -230,8 +254,8 @@ displaY = wx.GetDisplaySizeMM()[1]
 font = wx.Font(displaY / 0x10,
                wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
 
-wxMain  = Editor(sys.argv[0]+'.src') ; wxMain.Show()
-wxVoc   = Editor(sys.argv[0]+'.words')
-wxStack = Editor(sys.argv[0]+'.stack')
+wxVoc   = IDE(sys.argv[0]+'.words')
+wxStack = IDE(sys.argv[0]+'.stack')
+wxMain  = IDE(sys.argv[0]+'.src') ; wxMain.Show()
 
 wxapp.MainLoop()
