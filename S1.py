@@ -28,7 +28,7 @@ class Qbject:
             ## lexeme length
             self.lexlen = len(token.value)
             ## lexer position
-            self.lexpos = token.lexer.lexpos - self.lexlen
+            self.lexpos = token.lexpos - self.lexlen
         
     ## `print object` operator
     def __repr__(self): return self.dump()
@@ -84,7 +84,7 @@ class Active(Qbject): pass
 
 class Function(Active): pass
 
-class Operator(Qbject): pass
+class Operator(Active): pass
 
 class DefOperator(Operator): pass
 
@@ -118,39 +118,69 @@ import ply.yacc as yacc
 ##
 ## every token type must be equal to lowercased 
 ## name of correspondent Qbject class
-tokens = ['comment','symbol','number','int','hex','bin',
-          'defoperator','operator']
+tokens = ['comment','symbol','number','int','hex','bin','exp',
+          'defoperator','operator','string']
+
+states = (('string','exclusive'),)
 
 t_ignore = ' \t\r\n'
 
-def t_error(t): raise SyntaxError(t)
+t_string_ignore = ''
+
+def t_string(t):
+    r'\''
+    t.lexer.lexstring = ''
+    t.lexer.push_state('string')
+def t_string_string(t):
+    r'\''
+    t.lexer.pop_state()
+    t.value = t.lexer.lexstring
+    t.lexpos = t.lexer.lexpos - 1
+    return String(t.value,token=t)
+def t_string_char(t):
+    r'.'
+    t.lexer.lexstring += t.value
+
+def t_ANY_error(t): raise SyntaxError(t)
 
 def t_comment(t):
     r'[\\\#].*\n|\(.*\)'
+    t.lexpos = t.lexer.lexpos
     return Comment(t.value[:-1],token=t)
-
-def t_number(t):
-    r'[\+\-]?[0-9]+\.[0-9]*([eE][\+\-]?[0-9]+)?'
-    return Number(t.value,token=t)
 
 def t_hex(t):
     r'0x[0-9a-fA-f]+'
+    t.lexpos = t.lexer.lexpos
     return Number(t.value,token=t)
 
 def t_bin(t):
     r'0b[01]+'
+    t.lexpos = t.lexer.lexpos
+    return Number(t.value,token=t)
+
+def t_number(t):
+    r'[\+\-]?[0-9]+\.[0-9]*([eE][\+\-]?[0-9]+)?'
+    t.lexpos = t.lexer.lexpos
+    return Number(t.value,token=t)
+
+def t_exp(t):
+    r'[\+\-]?[0-9]+([eE][\+\-]?[0-9]+)?'
+    t.lexpos = t.lexer.lexpos
     return Number(t.value,token=t)
 
 def t_int(t):
     r'[\+\-]?[0-9]+'
+    t.lexpos = t.lexer.lexpos
     return Number(t.value,token=t)
 
 def t_defoperator(t):
     r'[\:\;]'
+    t.lexpos = t.lexer.lexpos
     return DefOperator(t.value,token=t)
 
 def t_symbol(t):
     r'[a-zA-Z0-9_]+'
+    t.lexpos = t.lexer.lexpos
     return Symbol(t.value,token=t)
 
 lexer = lex.lex()
@@ -269,14 +299,15 @@ class Editor(GUI):
         self.style_COMMENT = 1
         self.editor.StyleSetSpec(self.style_COMMENT,'fore:#0000FF')
         self.style_NUMBER = 2
-        self.editor.StyleSetSpec(self.style_NUMBER,'fore:#008800')
+        self.editor.StyleSetSpec(self.style_NUMBER,'fore:#008888')
         self.style_DEFOP = 3
         self.editor.StyleSetSpec(self.style_DEFOP,'fore:#880000')
+        self.style_STRING = 4
+        self.editor.StyleSetSpec(self.style_STRING,'fore:#888800')
         # bind colorizer event
         self.editor.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
     ## colorizer callback
     def onStyle(self,e):
-        print e
         lexer.input(self.editor.GetValue())
         while True:
             token = lexer.token()
@@ -286,6 +317,8 @@ class Editor(GUI):
                 self.editor.SetStyling(token.lexlen,self.style_COMMENT)
             elif token.type == 'number':
                 self.editor.SetStyling(token.lexlen,self.style_NUMBER)
+            elif token.type == 'string':
+                self.editor.SetStyling(token.lexlen,self.style_STRING)
             elif token.type == 'defoperator':
                 self.editor.SetStyling(token.lexlen,self.style_DEFOP)
             else:

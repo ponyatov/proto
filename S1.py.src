@@ -3,6 +3,8 @@
 
 -01 +02.30 -4e+5 0xDeadBeef 0b1101	\ numbers
 
+'s\tring\nwith escapes'
+
 : none ( -- ) ;							\ colon def
 : recurse ( -- ) none recurse none ;	\ recursion
 
