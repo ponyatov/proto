@@ -44,8 +44,9 @@ class Qbject:
     def pad(self,N): return '\n' + '\t'*N
     ## short header-only dump
     ## @returns string `<type:value>` 
-    def head(self,prefix=''): return '%s<%s:%s>' % (prefix,self.type,self.value)
-    
+    def head(self,prefix=''): return '%s<%s:%s>' % (prefix,self.type,self.str())
+    ## string representation
+    def str(self): return self.value
     ## `container[key]=object` operator: **store to object** by attribute key 
     def __setitem__(self,key,o): self.attr[key] = o ; return self
     ## `object[key]` operator: **lookup** in `attr{}`ibutes
@@ -58,7 +59,14 @@ class Primitive(Qbject): pass
 
 class Symbol(Primitive): pass
 
-class String(Primitive): pass
+class String(Primitive):
+    def str(self):
+        S = '\''
+        for c in self.value:
+            if c == '\n': S += '\\n'
+            elif c == '\t': S += '\\t'
+            else: S += c
+        return S + '\''
 
 class Number(Primitive): pass
 
@@ -177,6 +185,11 @@ def t_defoperator(t):
     r'[\:\;]'
     t.lexpos = t.lexer.lexpos
     return DefOperator(t.value,token=t)
+
+def t_operator(t):
+    r'[\<\>\+\-\*\/\=\@\!]'
+    t.lexpos = t.lexer.lexpos
+    return Operator(t.value,token=t)
 
 def t_symbol(t):
     r'[a-zA-Z0-9_]+'
@@ -297,13 +310,15 @@ class Editor(GUI):
         self.initColorizer()
     def initColorizer(self):
         self.style_COMMENT = 1
-        self.editor.StyleSetSpec(self.style_COMMENT,'fore:#0000FF')
+        self.editor.StyleSetSpec(self.style_COMMENT,'fore:#888800')
         self.style_NUMBER = 2
         self.editor.StyleSetSpec(self.style_NUMBER,'fore:#008888')
         self.style_DEFOP = 3
         self.editor.StyleSetSpec(self.style_DEFOP,'fore:#880000')
-        self.style_STRING = 4
-        self.editor.StyleSetSpec(self.style_STRING,'fore:#888800')
+        self.style_OP = 4
+        self.editor.StyleSetSpec(self.style_OP,'fore:#000088')
+        self.style_STRING = 5
+        self.editor.StyleSetSpec(self.style_STRING,'fore:#880088')
         # bind colorizer event
         self.editor.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
     ## colorizer callback
@@ -319,6 +334,8 @@ class Editor(GUI):
                 self.editor.SetStyling(token.lexlen,self.style_NUMBER)
             elif token.type == 'string':
                 self.editor.SetStyling(token.lexlen,self.style_STRING)
+            elif token.type == 'operator':
+                self.editor.SetStyling(token.lexlen,self.style_OP)
             elif token.type == 'defoperator':
                 self.editor.SetStyling(token.lexlen,self.style_DEFOP)
             else:
