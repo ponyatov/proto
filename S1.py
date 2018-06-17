@@ -82,6 +82,15 @@ class Operator(Qbject): pass
 
 ## @}
 
+## @defgroup s1meta Meta
+## @{
+
+class Meta(Qbject): pass
+
+class Comment(Meta): pass
+
+## @}
+
 ## @}
 
 ## @defgroup s1lexer Syntax parser
@@ -103,7 +112,19 @@ import ply.yacc as yacc
 ## name of correspondent Qbject class
 tokens = ['comment','symbol']
 
+t_ignore = ' \t\r\n'
 
+def t_error(t): raise SyntaxError(t)
+
+def t_comment(t):
+    r'\#.*\n'
+    return Comment(t.value)
+    
+def t_symbol(t):
+    r'[a-zA-Z0-9_]+'
+    return Symbol(t.value)
+
+lexer = lex.lex()
 
 ## @}
 
@@ -183,8 +204,8 @@ class Menu(GUI):
         self.menubar = wx.MenuBar() ; frame.frame.SetMenuBar(self.menubar)
         ## file menu
         self.file = wx.Menu() ; self.menubar.Append(self.file,'&File')
-        self.file.Append(wx.ID_SAVE,'&Save')
-        self.file.Append(wx.ID_APPLY,'&Backup\tCtrl+E')
+        self.save = self.file.Append(wx.ID_SAVE,'&Save')
+        self.backup = self.file.Append(wx.ID_APPLY,'&Backup\tCtrl+E')
         ## file/quit
         self.quit = self.file.Append(wx.ID_EXIT,'&Quit')
         ## debug menu
@@ -213,8 +234,30 @@ class Editor(GUI):
         self.editor.SetTabWidth(4)
         self.editor.StyleSetSpec(wx.stc.STC_STYLE_DEFAULT,
                         'face:%s,size:%s' % (font.FaceName, font.PointSize))
+        ## colorizer
+        self.initColorizer()
+    def initColorizer(self):
+        self.style_COMMENT = 1
+        self.editor.StyleSetSpec(self.style_COMMENT,'fore:#0000FF')
+        # bind colorizer event
+        self['frame'].frame.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
+    ## colorizer callback
+    def onStyle(self,e):
+        print e
+        lexer.input(self.editor.GetValue())
+        while True:
+            token = lexer.token()
+            print token
+            if not token: break  # end of source
+            self.editor.StartStyling(token.lexpos, 0xFF)
+            if token.type == 'comment':
+                self.editor.SetStyling(token.toklen,self.style_COMMENT)
+            else:
+                self.editor.SetStyling(0,0)
     ## set text contents value
     def SetValue(self,value): self.editor.SetValue(value)
+    ## get text value from wrapped wx.stc
+    def GetValue(self): return self.editor.GetValue()
         
 ## IDE window (base GUI widget in micro IDE)
 class IDE(GUI):
@@ -228,6 +271,7 @@ class IDE(GUI):
         self['editor'] = Editor(V,frame)
         self.onLoad()
         ## menu/key bindings
+        frame.frame.Bind(wx.EVT_MENU,self.onSave,menu.save)
         frame.frame.Bind(wx.EVT_MENU,self.onClose,menu.quit)
         frame.frame.Bind(wx.EVT_MENU,self.onVoc,menu.voc)
         frame.frame.Bind(wx.EVT_MENU,self.onStack,menu.stack)
@@ -258,6 +302,12 @@ class IDE(GUI):
         wxMain['frame'].Close()
         wxVoc['frame'].Close()
         wxStack['frame'].Close()
+        sys.exit(0)
+    ## save file
+    def onSave(self,event):
+        F = open(self.value,'w')
+        F.write(self['editor'].GetValue())
+        F.close()
     ## event on editor start (load file from window title)
     def onLoad(self):
         try: F = open(self.value,'r')
