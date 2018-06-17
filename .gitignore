@@ -5,3 +5,4 @@
 *.pyc
 
 proto/
+doxygen_sqlite3.db

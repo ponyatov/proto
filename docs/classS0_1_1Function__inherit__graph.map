@@ -1,0 +1,6 @@
+<map id="S0.Function" name="S0.Function">
+<area shape="rect" id="node4" href="$classS0_1_1Method.html" title="class method " alt="" coords="5,229,91,256"/>
+<area shape="rect" id="node5" href="$classS0_1_1VM.html" title="virtual machine command: void function(void) works on data stack " alt="" coords="115,229,178,256"/>
+<area shape="rect" id="node2" href="$classS0_1_1Active.html" title="objects with executable semantics " alt="" coords="58,80,137,107"/>
+<area shape="rect" id="node3" href="$classS0_1_1Qbject.html" title="base object class, such named for avoiding Python3 interference with Object " alt="" coords="57,5,137,32"/>
+</map>

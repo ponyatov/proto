@@ -1,5 +1,5 @@
 doxy:
-	rm -rf doc/html ; doxygen doxy.gen >/dev/null
+	rm -rf docs ; doxygen doxy.gen >/dev/null
 
 all: S0.py.log doxy 
 

@@ -8,6 +8,7 @@
 import os,sys
 
 ## @defgroup s1sym Symbolic class system
+## @brief <a href="http://ponyatov.quora.com/On-computer-language-design-Symbolic-data-type-system">symbolic in the sense of computer algebra</a>
 ## @{
 
 ## base object class, such named for avoiding Python3 interference with `Object`
@@ -53,13 +54,18 @@ class Qbject:
     def __getitem__(self,key): return self.attr[key]
 
 ## @defgroup s1prim Primitive
+## @brief primitive machine-level types
 ## @{
 
+## primitive machine-level types
 class Primitive(Qbject): pass
 
+## symbol/atom
 class Symbol(Primitive): pass
 
+## string 
 class String(Primitive):
+    ## linear `string` representation with escapes
     def str(self):
         S = '\''
         for c in self.value:
@@ -68,13 +74,16 @@ class String(Primitive):
             else: S += c
         return S + '\''
 
+## number
 class Number(Primitive): pass
 
+## integer number
 class Integer(Number): pass
 
 ## @}
 
 ## @defgroup s1container Container
+## @brief objects targeted for data holding
 ## @{
 
 class Container(Qbject): pass
@@ -86,6 +95,7 @@ class Map(Container): pass
 ## @}
 
 ## @defgroup s1active Active
+## @brief objects with executable semantics
 ## @{
 
 class Active(Qbject): pass
@@ -104,6 +114,12 @@ class DefOperator(Operator): pass
 class Meta(Qbject): pass
 
 class Comment(Meta): pass
+
+## @}
+
+## @defgroup io IO
+## @brief Filesystem and Network interfacing 
+## @{
 
 ## @}
 
@@ -129,78 +145,96 @@ import ply.yacc as yacc
 tokens = ['comment','symbol','number','int','hex','bin','exp',
           'defoperator','operator','string']
 
+## lexer states: extra `string` mode
 states = (('string','exclusive'),)
 
+## drop spaces
 t_ignore = ' \t\r\n'
 
+## don't ignore anything in string
 t_string_ignore = ''
 
+## string lexer rule: start `string` mode 
 def t_string(t):
     r'\''
     t.lexer.lexstring = ''
     t.lexer.push_state('string')
+## string lexer rule: stop `string` mode 
 def t_string_string(t):
     r'\''
     t.lexer.pop_state()
     t.value = t.lexer.lexstring
     t.lexpos = t.lexer.lexpos - 1
     return String(t.value,token=t)
+## any character
 def t_string_char(t):
     r'.'
     t.lexer.lexstring += t.value
 
+## lexer error callback
 def t_ANY_error(t): raise SyntaxError(t)
 
+## comment lexer rule
 def t_comment(t):
     r'[\\\#].*\n|\(.*\)'
     t.lexpos = t.lexer.lexpos
     return Comment(t.value[:-1],token=t)
 
+## hex number
 def t_hex(t):
     r'0x[0-9a-fA-f]+'
     t.lexpos = t.lexer.lexpos
     return Number(t.value,token=t)
 
+## binary number
 def t_bin(t):
     r'0b[01]+'
     t.lexpos = t.lexer.lexpos
     return Number(t.value,token=t)
 
+## number
 def t_number(t):
     r'[\+\-]?[0-9]+\.[0-9]*([eE][\+\-]?[0-9]+)?'
     t.lexpos = t.lexer.lexpos
     return Number(t.value,token=t)
 
+## exponential number variant
 def t_exp(t):
     r'[\+\-]?[0-9]+([eE][\+\-]?[0-9]+)?'
     t.lexpos = t.lexer.lexpos
     return Number(t.value,token=t)
 
+## integer
 def t_int(t):
     r'[\+\-]?[0-9]+'
     t.lexpos = t.lexer.lexpos
     return Number(t.value,token=t)
 
+## definition operator
 def t_defoperator(t):
     r'[\:\;]'
     t.lexpos = t.lexer.lexpos
     return DefOperator(t.value,token=t)
 
+## operator
 def t_operator(t):
     r'[\<\>\+\-\*\/\=\@\!]'
     t.lexpos = t.lexer.lexpos
     return Operator(t.value,token=t)
 
+## symbol: word name
 def t_symbol(t):
     r'[a-zA-Z0-9_]+'
     t.lexpos = t.lexer.lexpos
     return Symbol(t.value,token=t)
 
+## lexer
 lexer = lex.lex()
 
 ## @}
 
 ## @defgroup s1fvm oFORTH Virtual Machine
+## @brief FORTH-inspired stack engine based on OOP /no addressable memory/
 ## @{
 
 ## data stack
@@ -209,9 +243,17 @@ D = Stack('DATA')
 ## vocabulary
 W = Map('FORTH')
 
+## @defgroup s1fqueue Interpreter Queue
+## @brief Interface between oFORTH and GUI/network query services
+## @{
+import Queue,threading
+
+## @}
+
 ## @}
 
 ## @defgroup s2meta Metainfo
+## @brief metaprogramming
 ## @{
 
 ## short module name
@@ -276,7 +318,9 @@ class Menu(GUI):
         self.menubar = wx.MenuBar() ; frame.frame.SetMenuBar(self.menubar)
         ## file menu
         self.file = wx.Menu() ; self.menubar.Append(self.file,'&File')
+        ## file/save
         self.save = self.file.Append(wx.ID_SAVE,'&Save')
+        ## file/backup (vocabulary)
         self.backup = self.file.Append(wx.ID_APPLY,'&Backup\tCtrl+E')
         ## file/quit
         self.quit = self.file.Append(wx.ID_EXIT,'&Quit')
@@ -308,15 +352,21 @@ class Editor(GUI):
                         'face:%s,size:%s' % (font.FaceName, font.PointSize))
         ## colorizer
         self.initColorizer()
+    ## colorizer init
     def initColorizer(self):
+        ## comment style
         self.style_COMMENT = 1
         self.editor.StyleSetSpec(self.style_COMMENT,'fore:#888800')
+        ## number style
         self.style_NUMBER = 2
         self.editor.StyleSetSpec(self.style_NUMBER,'fore:#008888')
+        ## defoperator
         self.style_DEFOP = 3
         self.editor.StyleSetSpec(self.style_DEFOP,'fore:#880000')
+        ## operator
         self.style_OP = 4
         self.editor.StyleSetSpec(self.style_OP,'fore:#000088')
+        ## string literal
         self.style_STRING = 5
         self.editor.StyleSetSpec(self.style_STRING,'fore:#880088')
         # bind colorizer event

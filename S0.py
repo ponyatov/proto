@@ -10,7 +10,6 @@ import os,sys
 SRC = open(sys.argv[0]+'.src','r').read()
 
 ## @defgroup sym Symbolic class system
-## @brief <a href="http://ponyatov.quora.com/On-computer-language-design-Symbolic-data-type-system">symbolic in the sense of computer algebra</a>
 ## @{
 
 ## base object class, such named for avoiding Python3 interference with `Object`
@@ -84,7 +83,6 @@ class Qbject:
     def py(self): return str(self.value)
     
 ## @defgroup prim Primitive
-## @brief primitive machine-level types
 ## @{
 
 ## primitive machine-level types
@@ -118,7 +116,6 @@ class String(Primitive):
 ## @}
 
 ## @defgroup container Container
-## @brief objects targeted for data holding
 ## @{
 
 ## objects targeted for data holding
@@ -153,7 +150,6 @@ class Vector(Container):
 ## @}
 
 ## @defgroup active Active
-## @brief objects with executable semantics
 ## @{
 
 ## objects with **executable semantics**
@@ -178,7 +174,7 @@ class Method(Function): pass
 
 ## @}
 
-## @defgroup io IO
+## @defgroup s0io IO
 ## @brief reduced support for file writing (for code autogen) 
 ## @{
 
@@ -274,7 +270,6 @@ lexer = lex.lex()
 ## @}
 
 ## @defgroup fvm oFORTH Virtual Machine
-## @brief FORTH-inspired stack engine based on OOP /no addressable memory/
 ## @{
 
 ## @defgroup voc Vocabulary
