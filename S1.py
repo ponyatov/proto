@@ -14,7 +14,7 @@ import os,sys
 class Qbject:
     ## construct as `<type:value>` pair 
     ## **universal object can hold nested elements**
-    def __init__(self,V):
+    def __init__(self,V,token=None):
         ## object type
         self.type = self.__class__.__name__.lower()
         ## single value
@@ -23,6 +23,12 @@ class Qbject:
         self.attr = {}
         ## init `nest[]`ed elements /ordered vector/
         self.nest = []
+        ## lexer info
+        if token:
+            ## lexeme length
+            self.lexlen = len(token.value)
+            ## lexer position
+            self.lexpos = token.lexer.lexpos - self.lexlen
         
     ## `print object` operator
     def __repr__(self): return self.dump()
@@ -80,6 +86,8 @@ class Function(Active): pass
 
 class Operator(Qbject): pass
 
+class DefOperator(Operator): pass
+
 ## @}
 
 ## @defgroup s1meta Meta
@@ -110,19 +118,40 @@ import ply.yacc as yacc
 ##
 ## every token type must be equal to lowercased 
 ## name of correspondent Qbject class
-tokens = ['comment','symbol']
+tokens = ['comment','symbol','number','int','hex','bin',
+          'defoperator','operator']
 
 t_ignore = ' \t\r\n'
 
 def t_error(t): raise SyntaxError(t)
 
 def t_comment(t):
-    r'\#.*\n'
-    return Comment(t.value)
-    
+    r'[\\\#].*\n|\(.*\)'
+    return Comment(t.value[:-1],token=t)
+
+def t_number(t):
+    r'[\+\-]?[0-9]+\.[0-9]*([eE][\+\-]?[0-9]+)?'
+    return Number(t.value,token=t)
+
+def t_hex(t):
+    r'0x[0-9a-fA-f]+'
+    return Number(t.value,token=t)
+
+def t_bin(t):
+    r'0b[01]+'
+    return Number(t.value,token=t)
+
+def t_int(t):
+    r'[\+\-]?[0-9]+'
+    return Number(t.value,token=t)
+
+def t_defoperator(t):
+    r'[\:\;]'
+    return DefOperator(t.value,token=t)
+
 def t_symbol(t):
     r'[a-zA-Z0-9_]+'
-    return Symbol(t.value)
+    return Symbol(t.value,token=t)
 
 lexer = lex.lex()
 
@@ -239,19 +268,26 @@ class Editor(GUI):
     def initColorizer(self):
         self.style_COMMENT = 1
         self.editor.StyleSetSpec(self.style_COMMENT,'fore:#0000FF')
+        self.style_NUMBER = 2
+        self.editor.StyleSetSpec(self.style_NUMBER,'fore:#008800')
+        self.style_DEFOP = 3
+        self.editor.StyleSetSpec(self.style_DEFOP,'fore:#880000')
         # bind colorizer event
-        self['frame'].frame.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
+        self.editor.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
     ## colorizer callback
     def onStyle(self,e):
         print e
         lexer.input(self.editor.GetValue())
         while True:
             token = lexer.token()
-            print token
             if not token: break  # end of source
             self.editor.StartStyling(token.lexpos, 0xFF)
             if token.type == 'comment':
-                self.editor.SetStyling(token.toklen,self.style_COMMENT)
+                self.editor.SetStyling(token.lexlen,self.style_COMMENT)
+            elif token.type == 'number':
+                self.editor.SetStyling(token.lexlen,self.style_NUMBER)
+            elif token.type == 'defoperator':
+                self.editor.SetStyling(token.lexlen,self.style_DEFOP)
             else:
                 self.editor.SetStyling(0,0)
     ## set text contents value
