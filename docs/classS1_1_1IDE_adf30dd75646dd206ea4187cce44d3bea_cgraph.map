@@ -1,0 +1,9 @@
+<map id="S1.IDE.__init__" name="S1.IDE.__init__">
+<area shape="rect" id="node2" href="$classS1_1_1IDE.html#ad9cf3ec10db9250716cff6c154c54cca" title="event on editor start (load file from window title) " alt="" coords="171,5,282,32"/>
+<area shape="rect" id="node3" href="$classS1_1_1IDE.html#ac080bdba17abe3b806bd7f8a348f8dca" title="save file " alt="" coords="170,56,283,83"/>
+<area shape="rect" id="node4" href="$classS1_1_1IDE.html#a05b76b319f82078161aea95e3b987917" title="event on editor exit " alt="" coords="168,107,285,133"/>
+<area shape="rect" id="node6" href="$classS1_1_1IDE.html#a9df3770e2e98d5730ffa038916dbd30e" title="vocabulary window update callback " alt="" coords="173,157,280,184"/>
+<area shape="rect" id="node7" href="$classS1_1_1IDE.html#a975bcb8963f3200f53a0193d58499cd8" title="update callback [F12] " alt="" coords="333,208,459,235"/>
+<area shape="rect" id="node8" href="$classS1_1_1IDE.html#ab348129684ea8629d99cd6dc83c9ddc1" title="stack window update callback " alt="" coords="168,259,285,285"/>
+<area shape="rect" id="node5" href="$classS1_1_1IDE.html#ac8600ef846822b03e35b70a1f003695c" title="close editor " alt="" coords="345,107,447,133"/>
+</map>

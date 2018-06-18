@@ -14,7 +14,7 @@ import os,sys,re
 class Qbject:
     ## construct as `<type:value>` pair 
     ## **universal object can hold nested elements**
-    def __init__(self,V):
+    def __init__(self,V,token=None):
         ## object type
         self.type = self.__class__.__name__.lower()
         ## single value
@@ -23,6 +23,12 @@ class Qbject:
         self.attr = {}
         ## init `nest[]`ed elements /ordered vector/
         self.nest = []
+        ## lexer info
+        if token:
+            ## lexeme length
+            self.lexlen = len(token.value)
+            ## lexer position
+            self.lexpos = token.lexpos - self.lexlen
         
     ## `print object` operator
     def __repr__(self): return self.dump()
@@ -39,38 +45,44 @@ class Qbject:
     ## short header-only dump
     ## @returns string `<type:value>` 
     def head(self,prefix=''): return '%s<%s:%s>' % (prefix,self.type,self.str())
-    ## value in string
+    ## value in string representation
     def str(self): return self.value
-    
     ## `container[key]=object` operator: **store to object** by attribute key 
     def __setitem__(self,key,o): self.attr[key] = o ; return self
     ## `object[key]` operator: **lookup** in `attr{}`ibutes
     def __getitem__(self,key): return self.attr[key]
 
 ## @defgroup s1prim Primitive
+## @brief primitive machine-level types
 ## @{
 
+## primitive machine-level types
 class Primitive(Qbject): pass
 
+## symbol/atom
 class Symbol(Primitive): pass
 
+## string 
 class String(Primitive):
+    ## linear `string` representation with escapes
     def str(self):
         S = '\''
         for c in self.value:
             if c == '\n': S += '\\n'
             elif c == '\t': S += '\\t'
             else: S += c
-        return S+'\''
-        
+        return S + '\''
 
+## number
 class Number(Primitive): pass
 
+## integer number
 class Integer(Number): pass
 
 ## @}
 
 ## @defgroup s1container Container
+## @brief objects targeted for data holding
 ## @{
 
 class Container(Qbject): pass
@@ -82,13 +94,31 @@ class Map(Container): pass
 ## @}
 
 ## @defgroup s1active Active
+## @brief objects with executable semantics
 ## @{
 
 class Active(Qbject): pass
 
 class Function(Active): pass
 
-class Operator(Qbject): pass
+class Operator(Active): pass
+
+class DefOperator(Operator): pass
+
+## @}
+
+## @defgroup s1meta Meta
+## @{
+
+class Meta(Qbject): pass
+
+class Comment(Meta): pass
+
+## @}
+
+## @defgroup io IO
+## @brief Filesystem and Network interfacing 
+## @{
 
 ## @}
 
@@ -111,27 +141,35 @@ import ply.yacc as yacc
 ##
 ## every token type must be equal to lowercased 
 ## name of correspondent Qbject class
-tokens = ['comment','symbol','string','number','hex','bin','operator','const']
+<<<<<<< HEAD
+tokens = ['comment','symbol','number','num','exp','int','hex','bin',
+          'operator','defoperator','string','const']
 
+## lexer states: extra `string` mode
 states = (('string','exclusive'),)
 
+## don't ignore anything in string
 t_string_ignore = ''
 
+## string lexer rule: start `string` mode 
 def t_string(t):
     r'\''
     t.lexer.push_state('string')
     t.lexer.lexstring = ''
     t.lexer.posstring = t.lexer.lexpos
+## string lexer rule: stop `string` mode 
 def t_string_string(t):
     r'\''
     t.lexer.pop_state()
+    t.value  = t.lexer.lexstring
     t.lexpos = t.lexer.posstring
-    t.value = t.lexer.lexstring
-    return t
-def t_string_any(t):
+    return String(t.value,token=t)
+## any character
+def t_string_char(t):
     r'.'
     t.lexer.lexstring += t.value
 
+## drop spaces
 t_ignore = ' \t\r\n'
 
 def t_ANY_error(t): raise SyntaxError(t)
@@ -159,11 +197,73 @@ def t_operator(t):
     r'[\<\>\:\;\=\@\+\-\*\/]'
     return t
 
+=======
+
+## lexer error callback
+def t_ANY_error(t): raise SyntaxError(t)
+
+## comment lexer rule
+def t_comment(t):
+    r'[\\\#].*\n|\(.*\)'
+    t.lexpos = t.lexer.lexpos
+    return Comment(t.value[:-1],token=t)
+
+## hex number
+def t_hex(t):
+    r'0x[0-9a-fA-f]+'
+    t.lexpos = t.lexer.lexpos
+    return Number(t.value,token=t)
+
+## binary number
+def t_bin(t):
+    r'0b[01]+'
+    t.lexpos = t.lexer.lexpos
+    return Number(t.value,token=t)
+
+## number
+def t_number(t):
+    r'[\+\-]?[0-9]+\.[0-9]*([eE][\+\-]?[0-9]+)?'
+    t.lexpos = t.lexer.lexpos
+    return Number(t.value,token=t)
+
+## exponential number variant
+def t_exp(t):
+    r'[\+\-]?[0-9]+([eE][\+\-]?[0-9]+)?'
+    t.lexpos = t.lexer.lexpos
+    return Number(t.value,token=t)
+
+## integer
+def t_int(t):
+    r'[\+\-]?[0-9]+'
+    t.lexpos = t.lexer.lexpos
+    return Number(t.value,token=t)
+
+## definition operator
+def t_defoperator(t):
+    r'[\:\;]'
+    t.lexpos = t.lexer.lexpos
+    return DefOperator(t.value,token=t)
+
+## operator
+def t_operator(t):
+    r'[\<\>\+\-\*\/\=\@\!]'
+    t.lexpos = t.lexer.lexpos
+    return Operator(t.value,token=t)
+
+## symbol: word name
+def t_symbol(t):
+    r'[a-zA-Z0-9_]+'
+    t.lexpos = t.lexer.lexpos
+    return Symbol(t.value,token=t)
+
+## lexer
+>>>>>>> fedf057b72c174519089fab20988f8c68fb20e6e
 lexer = lex.lex()
 
 ## @}
 
 ## @defgroup s1fvm oFORTH Virtual Machine
+## @brief FORTH-inspired stack engine based on OOP /no addressable memory/
 ## @{
 
 ## data stack
@@ -172,9 +272,17 @@ D = Stack('DATA')
 ## vocabulary
 W = Map('FORTH')
 
+## @defgroup s1fqueue Interpreter Queue
+## @brief Interface between oFORTH and GUI/network query services
+## @{
+import Queue,threading
+
+## @}
+
 ## @}
 
 ## @defgroup s2meta Metainfo
+## @brief metaprogramming
 ## @{
 
 ## short module name
@@ -241,7 +349,13 @@ class Menu(GUI):
         self.menubar = wx.MenuBar() ; frame.frame.SetMenuBar(self.menubar)
         ## file menu
         self.file = wx.Menu() ; self.menubar.Append(self.file,'&File')
+<<<<<<< HEAD
         self.save = self.file.Append(wx.ID_SAVE,'&Save')
+=======
+        ## file/save
+        self.save = self.file.Append(wx.ID_SAVE,'&Save')
+        ## file/backup (vocabulary)
+>>>>>>> fedf057b72c174519089fab20988f8c68fb20e6e
         self.backup = self.file.Append(wx.ID_APPLY,'&Backup\tCtrl+E')
         ## file/quit
         self.quit = self.file.Append(wx.ID_EXIT,'&Quit')
@@ -273,6 +387,7 @@ class Editor(GUI):
                         'face:%s,size:%s' % (font.FaceName, font.PointSize))
         ## colorizer
         self.initColorizer()
+<<<<<<< HEAD
     ## init colorizer
     def initColorizer(self):
         self.style_COMMENT = 1
@@ -307,6 +422,49 @@ class Editor(GUI):
     ## set text contents value
     def SetValue(self,value): self.editor.SetValue(value)
     ## get text contents
+=======
+    ## colorizer init
+    def initColorizer(self):
+        ## comment style
+        self.style_COMMENT = 1
+        self.editor.StyleSetSpec(self.style_COMMENT,'fore:#888800')
+        ## number style
+        self.style_NUMBER = 2
+        self.editor.StyleSetSpec(self.style_NUMBER,'fore:#008888')
+        ## defoperator
+        self.style_DEFOP = 3
+        self.editor.StyleSetSpec(self.style_DEFOP,'fore:#880000')
+        ## operator
+        self.style_OP = 4
+        self.editor.StyleSetSpec(self.style_OP,'fore:#000088')
+        ## string literal
+        self.style_STRING = 5
+        self.editor.StyleSetSpec(self.style_STRING,'fore:#880088')
+        # bind colorizer event
+        self.editor.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
+    ## colorizer callback
+    def onStyle(self,e):
+        lexer.input(self.editor.GetValue())
+        while True:
+            token = lexer.token()
+            if not token: break  # end of source
+            self.editor.StartStyling(token.lexpos, 0xFF)
+            if token.type == 'comment':
+                self.editor.SetStyling(token.lexlen,self.style_COMMENT)
+            elif token.type == 'number':
+                self.editor.SetStyling(token.lexlen,self.style_NUMBER)
+            elif token.type == 'string':
+                self.editor.SetStyling(token.lexlen,self.style_STRING)
+            elif token.type == 'operator':
+                self.editor.SetStyling(token.lexlen,self.style_OP)
+            elif token.type == 'defoperator':
+                self.editor.SetStyling(token.lexlen,self.style_DEFOP)
+            else:
+                self.editor.SetStyling(0,0)
+    ## set text contents value
+    def SetValue(self,value): self.editor.SetValue(value)
+    ## get text value from wrapped wx.stc
+>>>>>>> fedf057b72c174519089fab20988f8c68fb20e6e
     def GetValue(self): return self.editor.GetValue()
         
 ## IDE window (base GUI widget in micro IDE)
@@ -321,6 +479,7 @@ class IDE(GUI):
         self['editor'] = Editor(V,frame)
         self.onLoad()
         ## menu/key bindings
+        frame.frame.Bind(wx.EVT_MENU,self.onSave,menu.save)
         frame.frame.Bind(wx.EVT_MENU,self.onClose,menu.quit)
         frame.frame.Bind(wx.EVT_MENU,self.onSave,menu.save)
         frame.frame.Bind(wx.EVT_MENU,self.onVoc,menu.voc)
@@ -349,10 +508,22 @@ class IDE(GUI):
     def Close(self): self['frame'].frame.Close()
     ## event on editor exit
     def onClose(self,event):
+<<<<<<< HEAD
         wxMain.Close()
         wxVoc.Close()
         wxStack.Close()
         sys.exit(0)
+=======
+        wxMain['frame'].Close()
+        wxVoc['frame'].Close()
+        wxStack['frame'].Close()
+        sys.exit(0)
+    ## save file
+    def onSave(self,event):
+        F = open(self.value,'w')
+        F.write(self['editor'].GetValue())
+        F.close()
+>>>>>>> fedf057b72c174519089fab20988f8c68fb20e6e
     ## event on editor start (load file from window title)
     def onLoad(self):
         try: F = open(self.value,'r')
