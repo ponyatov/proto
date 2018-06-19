@@ -141,7 +141,7 @@ import ply.yacc as yacc
 ##
 ## every token type must be equal to lowercased 
 ## name of correspondent Qbject class
-<<<<<<< HEAD
+
 tokens = ['comment','symbol','number','num','exp','int','hex','bin',
           'operator','defoperator','string','const']
 
@@ -171,33 +171,6 @@ def t_string_char(t):
 
 ## drop spaces
 t_ignore = ' \t\r\n'
-
-def t_ANY_error(t): raise SyntaxError(t)
-
-def t_comment(t):
-    r'[\#\\].*\n|\(.*\)'
-    return t
-
-def t_hex(t):
-    r'0x[0-9a-fA-F]+'
-    t.type = 'number' ; return t
-def t_bin(t):
-    r'0b[01]+'
-    t.type = 'number' ; return t
-def t_number(t):
-    r'[\+\-]?[0-9]+(\.[0-9]*)?([eE][\+\-][0-9]+)?'
-    return t
-
-def t_symbol(t):
-    r'[a-zA-Z0-9_\.]+'
-    if re.match(r'^[A-Z]+$',t.value): t.type = 'const'
-    return t
-
-def t_operator(t):
-    r'[\<\>\:\;\=\@\+\-\*\/]'
-    return t
-
-=======
 
 ## lexer error callback
 def t_ANY_error(t): raise SyntaxError(t)
@@ -257,7 +230,6 @@ def t_symbol(t):
     return Symbol(t.value,token=t)
 
 ## lexer
->>>>>>> fedf057b72c174519089fab20988f8c68fb20e6e
 lexer = lex.lex()
 
 ## @}
@@ -349,13 +321,9 @@ class Menu(GUI):
         self.menubar = wx.MenuBar() ; frame.frame.SetMenuBar(self.menubar)
         ## file menu
         self.file = wx.Menu() ; self.menubar.Append(self.file,'&File')
-<<<<<<< HEAD
-        self.save = self.file.Append(wx.ID_SAVE,'&Save')
-=======
         ## file/save
         self.save = self.file.Append(wx.ID_SAVE,'&Save')
         ## file/backup (vocabulary)
->>>>>>> fedf057b72c174519089fab20988f8c68fb20e6e
         self.backup = self.file.Append(wx.ID_APPLY,'&Backup\tCtrl+E')
         ## file/quit
         self.quit = self.file.Append(wx.ID_EXIT,'&Quit')
@@ -384,70 +352,37 @@ class Editor(GUI):
         ## set default styling in editor
         self.editor.SetTabWidth(4)
         self.editor.StyleSetSpec(wx.stc.STC_STYLE_DEFAULT,
-                        'face:%s,size:%s' % (font.FaceName, font.PointSize))
+                'back:black,face:%s,size:%s' % (font.FaceName, font.PointSize))
         ## colorizer
         self.initColorizer()
-<<<<<<< HEAD
     ## init colorizer
-    def initColorizer(self):
-        self.style_COMMENT = 1
-        self.editor.StyleSetSpec(self.style_COMMENT,'fore:#0000FF')
-        self.style_NUMBER = 2
-        self.editor.StyleSetSpec(self.style_NUMBER,'fore:#008800')
-        self.style_OPERATOR = 3
-        self.editor.StyleSetSpec(self.style_OPERATOR,'fore:#AA0000')
-        self.style_CONST = 4
-        self.editor.StyleSetSpec(self.style_CONST,'fore:#008888')
-        self.style_STRING = 5
-        self.editor.StyleSetSpec(self.style_STRING,'fore:#888800')
-        # bind colorizer event
-        self.editor.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
-    ## styling event callback
-    def onStyle(self,event):
-        lexer.input(self.editor.GetValue())
-        while True:
-            token = lexer.token()
-            if not token: break
-            self.editor.StartStyling(token.lexpos,0xFF)
-            if token.type in ['comment']:
-                self.editor.SetStyling(len(token.value),self.style_COMMENT)
-            elif token.type in ['number']:
-                self.editor.SetStyling(len(token.value),self.style_NUMBER)
-            elif token.type in ['operator']:
-                self.editor.SetStyling(len(token.value),self.style_OPERATOR)
-            elif token.type in ['const']:
-                self.editor.SetStyling(len(token.value),self.style_CONST)
-            elif token.type in ['string']:
-                self.editor.SetStyling(len(token.value),self.style_STRING)
-    ## set text contents value
-    def SetValue(self,value): self.editor.SetValue(value)
-    ## get text contents
-=======
-    ## colorizer init
     def initColorizer(self):
         ## comment style
         self.style_COMMENT = 1
-        self.editor.StyleSetSpec(self.style_COMMENT,'fore:#888800')
+        self.editor.StyleSetSpec(self.style_COMMENT,'back:black,fore:darkcyan')
         ## number style
         self.style_NUMBER = 2
-        self.editor.StyleSetSpec(self.style_NUMBER,'fore:#008888')
+        self.editor.StyleSetSpec(self.style_NUMBER,'back:black,fore:cyan')
         ## defoperator
         self.style_DEFOP = 3
-        self.editor.StyleSetSpec(self.style_DEFOP,'fore:#880000')
+        self.editor.StyleSetSpec(self.style_DEFOP,'back:black,fore:#880000')
         ## operator
         self.style_OP = 4
-        self.editor.StyleSetSpec(self.style_OP,'fore:#000088')
+        self.editor.StyleSetSpec(self.style_OP,'back:black,fore:#000088')
         ## string literal
         self.style_STRING = 5
-        self.editor.StyleSetSpec(self.style_STRING,'fore:#880088')
+        self.editor.StyleSetSpec(self.style_STRING,'back:black,fore:#880088')
+        ## constant literal
+        self.style_CONST = 6
+        self.editor.StyleSetSpec(self.style_STRING,'back:black,fore:#008888')
         # bind colorizer event
         self.editor.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
-    ## colorizer callback
+    ## colorizer styling event callback
     def onStyle(self,e):
         lexer.input(self.editor.GetValue())
         while True:
             token = lexer.token()
-            if not token: break  # end of source
+            if not token: break                             # end of source
             self.editor.StartStyling(token.lexpos, 0xFF)
             if token.type == 'comment':
                 self.editor.SetStyling(token.lexlen,self.style_COMMENT)
@@ -459,12 +394,13 @@ class Editor(GUI):
                 self.editor.SetStyling(token.lexlen,self.style_OP)
             elif token.type == 'defoperator':
                 self.editor.SetStyling(token.lexlen,self.style_DEFOP)
+            elif token.type == 'symbol' and re.match(r'[A-Z]+',token.value):
+                self.editor.SetStyling(token.lexlen,self.style_CONST)
             else:
                 self.editor.SetStyling(0,0)
     ## set text contents value
     def SetValue(self,value): self.editor.SetValue(value)
     ## get text value from wrapped wx.stc
->>>>>>> fedf057b72c174519089fab20988f8c68fb20e6e
     def GetValue(self): return self.editor.GetValue()
         
 ## IDE window (base GUI widget in micro IDE)
@@ -508,22 +444,14 @@ class IDE(GUI):
     def Close(self): self['frame'].frame.Close()
     ## event on editor exit
     def onClose(self,event):
-<<<<<<< HEAD
-        wxMain.Close()
-        wxVoc.Close()
-        wxStack.Close()
-        sys.exit(0)
-=======
         wxMain['frame'].Close()
-        wxVoc['frame'].Close()
-        wxStack['frame'].Close()
+        wxVoc['frame'].Close() ; wxStack['frame'].Close()
         sys.exit(0)
     ## save file
     def onSave(self,event):
         F = open(self.value,'w')
         F.write(self['editor'].GetValue())
         F.close()
->>>>>>> fedf057b72c174519089fab20988f8c68fb20e6e
     ## event on editor start (load file from window title)
     def onLoad(self):
         try: F = open(self.value,'r')
