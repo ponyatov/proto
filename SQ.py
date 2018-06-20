@@ -1,33 +1,3 @@
-     
-## @}
- 
-## @defgroup persist persistent storage
-## @brief store system state in `.image` file
-## @ingroup voc
-## @{ 
- 
-import pickle
- 
-## image file name
-IMAGE = sys.argv[0] + '.image'
- 
-## backup vocabulary to `.image`
-def backup():
-    B = {}
-    # filter vocabulary ignoring all functions (VM commands) 
-    for i in W.keys():
-        if W[i].type not in ['function']: B[i] = W[i]
-    F = open(IMAGE,'wb') ; pickle.dump(B,F) ; F.close()
- 
-## restore from vocabulary  `.image`
-def restore():
-    global W
-    try: F = open(IMAGE,'rb') ; B = pickle.load(F) ; F.close()
-    except IOError: B = {}
-    # override all elements from image
-    for i in B: W[i] = B[i]
- 
-## @}
  
 ## @defgroup forth oFORTH
 ## @brief object FORTH interpreter

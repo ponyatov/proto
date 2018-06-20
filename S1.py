@@ -292,9 +292,42 @@ class DefOperator(Operator): pass
 ## data stack
 D = Stack('DATA')
 
+## @defgroup voc Vocabulary
+## @{
+
 ## vocabulary
 W = Map('FORTH')
 
+## @defgroup persist persistent storage
+## @brief store system state in `.image` file
+## @{ 
+ 
+import pickle
+ 
+## image file name
+IMAGE = sys.argv[0] + '.image'
+W['IMAGE'] = String(IMAGE)
+
+## backup vocabulary to `.image`
+def BACKUP():
+    # filter vocabulary ignoring all functions (VM commands) 
+    B = {}
+    for i in W.keys():
+        if W[i].type not in ['vm','function']: B[i] = W[i]
+    F = open(IMAGE,'wb') ; pickle.dump(B,F) ; F.close()
+W << BACKUP
+
+## restore from vocabulary  `.image`
+def RESTORE():
+    global W
+    try: F = open(IMAGE,'rb') ; B = pickle.load(F) ; F.close()
+    except IOError: B = {}
+    # override all elements from loaded image
+    for i in B: W[i] = B[i]
+W << RESTORE
+
+## @}
+## @}
 
 ## @defgroup s1lexer Syntax parser
 ## @brief powered with
