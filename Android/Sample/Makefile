@@ -13,7 +13,9 @@ MANIFEST	= $(MAIN)/AndroidManifest.xml
 JA_MAIN		= $(JA)/MainActivity.java
 LA_MAIN 	= $(LAYOUT)/activity_main.xml
 
-A: dirs Makefile $(MANIFEST) $(JA_MAIN) $(LA_MAIN)
+default: build
+
+src: dirs Makefile $(MANIFEST) $(JA_MAIN) $(LA_MAIN)
 
 dirs:
 	mkdir -p app app/src app/src/main $(JA) $(RES) $(LAYOUT) $(VALUES)
@@ -26,3 +28,10 @@ $(JA_MAIN): ../Sample/$(JA)/$(PACK)/sample/MainActivity.java Makefile
 	cat $< | sed "s/ponyatov\.sample/\Lponyatov.$(APP)/g" > $@
 $(LAYOUT)/activity_main.xml: ../Sample/$(LAYOUT)/activity_main.xml Makefile
 	cat $< | sed "s/ponyatov\.sample/\Lponyatov.$(APP)/g" > $@
+
+AAPT	= $(HOME)/Android/Sdk/build-tools/26.0.2/aapt
+
+build:
+	$(AAPT) package
+
+
