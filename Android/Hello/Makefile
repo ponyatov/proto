@@ -1,7 +1,9 @@
 CWD		= $(CURDIR)
 APP		= $(notdir $(CURDIR))
+APP_LOW	= $(shell echo $(APP) | sed 's/\(.*\)/\L\1/')
 
 SRC		= $(CWD)/src
+OBJ		= $(CWD)/obj
 
 PACK	= io/github/ponyatov
 
@@ -20,7 +22,7 @@ default: dirs build
 src: dirs Makefile $(MANIFEST) $(JA_MAIN) $(LA_MAIN)
 
 dirs:
-	mkdir -p $(JA) $(RES) $(LAYOUT) $(VALUES) $(SRC)/$(PACK)
+	mkdir -p $(JA) $(RES) $(LAYOUT) $(VALUES) $(SRC)/$(PACK) $(OBJ)
 
 Makefile: ../Sample/Makefile
 	cp $< $@
@@ -35,6 +37,7 @@ AAPT	= $(HOME)/Android/Sdk/build-tools/26.0.2/aapt
 JAR		= $(HOME)/Android/Sdk/platforms/android-9/android.jar
 
 build:
-	$(AAPT) package -m -J $(SRC) -M $(MANIFEST) -S $(RES) -I $(JAR)
-
+#	$(AAPT) package -f -m -J $(SRC) -M $(MANIFEST) -S $(RES) -I $(JAR)
+	javac -d obj -classpath src -bootclasspath $(JAR) \
+	$(SRC)/$(PACK)/$(APP_LOW)/*.java
 
