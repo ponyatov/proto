@@ -1,6 +1,5 @@
 CWD		= $(CURDIR)
 APP		= $(notdir $(CURDIR))
-APP_LOW	= $(shell echo $(APP) | tr '[:upper:]' '[:lower:]' )
 
 PACK	= io/github/ponyatov
 
@@ -21,8 +20,8 @@ dirs:
 
 Makefile: ../Sample/Makefile
 	cp $< $@
-$(MANIFEST): ../Sample/$(MANIFEST)
-	cat $< | sed "s/ponyatov\.sample/ponyatov.$(APP_LOW)/g" > $@
+$(MANIFEST): ../Sample/$(MANIFEST) Makefile
+	cat $< | sed "s/ponyatov\.sample/\Lponyatov.$(APP)/g" > $@
 $(JA_MAIN): ../Sample/$(JA)/$(PACK)/sample/MainActivity.java Makefile
-	cat $< | sed "s/ponyatov\.sample/ponyatov.$(APP_LOW)/g" > $@
+	cat $< | sed "s/ponyatov\.sample/\Lponyatov.$(APP)/g" > $@
 	
