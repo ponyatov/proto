@@ -46,48 +46,86 @@ class Qbject:
             self.lexpos = token.lexpos - self.lexlen
             ## lexeme line number in source code
             self.lineno = token.lineno
+            
     ## by default all objects `execute`s in itself
     def __call__(self): D << self ; return self
+    
+    ## @name attributes and object slots
+    ## @{
 
     ## `object[key]` operator: **lookup** in `attr{}`ibutes
     def __getitem__(self,key): return self.attr[key]
+    
     ## `container[key]=object` operator: **store to object** by attribute key 
     def __setitem__(self,key,o): self.attr[key] = o ; return self
+    
+    ## @}
+    
+    ## @name stack/vector behaviour
+    ## @{
 
     ## `<<` operator for stack-like default behavior
     def __lshift__(self,o): return self.push(o)
+    
     ## append element
     def push(self,o): self.nest.append(o) ; return self
+    
     ## @returns top element /without removing/
     def top(self): return self.nest[-1]
+   
     ## @returns top element
     def pop(self): return self.nest.pop()
+    
     ## drop top element
     def drop(self): del self.nest[-1] ; return self
+    
+    ## @}
      
-        
+    ## @name dump
+    ## @{
+    
     ## `print object` operator
+    ## @returns string full text dump in tree form
     def __repr__(self): return self.dump()
-    ## full dump in tree form
-    ## @returns string 
-    def dump(self,depth=0,prefix=''):
+    
+    ## variable holds IDs of all dumped objects (to avoid infty recursion)
+    dumped = {} 
+   
+    ## dump any object in full tree form (with infty recursion blocked)
+    ## @returns string full text dump in tree form
+    def dump(self, depth=0, prefix=''):
+        # generate short header
         S = self.pad(depth) + self.head(prefix)
-        for i in self.attr:
-            S += self.attr[i].dump(depth+1,prefix='%s = '%i)
+        # avoid infty recursion
+        if not depth: self.dumped.clear()           # reset dumped registry
+        else:
+            if self in self.dumped: return S+'...'  # break dumps
+            else:                   self.dumped[self] = 0
+        # attributes
+        for i in self.attr: S += self.attr[i].dump(depth+1, prefix='%s = ' % i)
+        # nest[]ed elements
+        for j in self.nest: S += j.dump(depth+1)
+        # return resulting tree
         return S
-    ## left pad for treee output
+    
+    ## left padding for treee output
     ## @returns string `'\\n\\t...'`
-    def pad(self,N): return '\n' + '\t'*N
-    ## short header-only dump
-    ## @returns string `<type:value>` 
-    def head(self,prefix=''): return '%s<%s:%s>' % (prefix,self.type,self.str())
-    ## value in string representation
+    def pad(self,N): return '\n' + '\t' * N
+    
+    ## value in string representation *to be overrided*
+    ## (can be differ from @ref value for complex objects)
     def str(self): return self.value
     
+    ## dump object in short form (header only)
+    ## @returns string `<type:value>` 
+    def head(self,prefix=''):
+        I = ' immed' if self.immed else ''
+        return '%s<%s:%s> 0x%X %s' % (prefix, self.type, self.str(), id(self), I)
 
+    ## @}
 
 ## @defgroup prim Primitive
-## @brief Core machine-level types
+## @brief primitive computer types (evaluates to itself)
 ## @{
 
 ## primitive machine-level types
@@ -108,10 +146,42 @@ class String(Primitive):
         return S + '\''
 
 ## number
-class Number(Primitive): pass
+class Number(Primitive):
+    ## construct with `float:value`
+    def __init__(self,V,token=None):
+        Primitive.__init__(self, V, token)
+        ## convert with `float()`
+        self.value = float(V)
 
-## integer number
-class Integer(Number): pass
+## integer
+class Integer(Number):
+    ## construct with `int:value`
+    def __init__(self,V,token=None):
+        Primitive.__init__(self, V, token)
+        ## convert with `int()`
+        self.value = int(V)
+
+## machine hex
+class Hex(Integer):
+    ## override with `int(base=16)`
+    def __init__(self,V,token=None):
+        Primitive.__init__(self, V, token)
+        ## convert with `base=16`
+        self.value = int(V[2:],0x10)
+    ## hex number print
+    ## @returns string value in `0x[0-9A-F]+` form
+    def str(self): return '0x%X' % self.value
+
+## machine binary
+class Binary(Integer):
+    ## override with `int(base=2)`
+    def __init__(self,V,token=None):
+        Primitive.__init__(self, V, token)
+        ## convert with `base=2`
+        self.value = int(V[2:],0x02)
+    ## binary number print
+    ## @returns string value in `0b[01]+` form
+    def str(self): return '0b{0:b}'.format(self.value)
 
 ## @}
 
