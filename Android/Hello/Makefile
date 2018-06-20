@@ -1,6 +1,8 @@
 CWD		= $(CURDIR)
 APP		= $(notdir $(CURDIR))
 
+SRC		= $(CWD)/src
+
 PACK	= io/github/ponyatov
 
 MAIN	= app/src/main
@@ -13,12 +15,12 @@ MANIFEST	= $(MAIN)/AndroidManifest.xml
 JA_MAIN		= $(JA)/MainActivity.java
 LA_MAIN 	= $(LAYOUT)/activity_main.xml
 
-default: build
+default: dirs build
 
 src: dirs Makefile $(MANIFEST) $(JA_MAIN) $(LA_MAIN)
 
 dirs:
-	mkdir -p app app/src app/src/main $(JA) $(RES) $(LAYOUT) $(VALUES)
+	mkdir -p $(JA) $(RES) $(LAYOUT) $(VALUES) $(SRC)/$(PACK)
 
 Makefile: ../Sample/Makefile
 	cp $< $@
@@ -30,8 +32,9 @@ $(LAYOUT)/activity_main.xml: ../Sample/$(LAYOUT)/activity_main.xml Makefile
 	cat $< | sed "s/ponyatov\.sample/\Lponyatov.$(APP)/g" > $@
 
 AAPT	= $(HOME)/Android/Sdk/build-tools/26.0.2/aapt
+JAR		= $(HOME)/Android/Sdk/platforms/android-9/android.jar
 
 build:
-	$(AAPT) package
+	$(AAPT) package -f -m -J $(SRC) -M $(MANIFEST) -S $(RES) -I $(JAR)
 
 
