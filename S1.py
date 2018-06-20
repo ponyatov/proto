@@ -162,7 +162,7 @@ def t_string_string(t):
     r'\''
     t.lexer.pop_state()
     t.value  = t.lexer.lexstring
-    t.lexpos = t.lexer.posstring
+    t.lexpos = t.lexer.posstring + len(t.value)
     return String(t.value,token=t)
 ## any character
 def t_string_char(t):
@@ -177,9 +177,9 @@ def t_ANY_error(t): raise SyntaxError(t)
 
 ## comment lexer rule
 def t_comment(t):
-    r'[\\\#].*\n|\(.*\)'
+    r'[\\\#].*\n|\(.*?\)'
     t.lexpos = t.lexer.lexpos
-    return Comment(t.value[:-1],token=t)
+    return Comment(t.value.replace('\n',''),token=t)
 
 ## hex number
 def t_hex(t):
@@ -352,29 +352,29 @@ class Editor(GUI):
         ## set default styling in editor
         self.editor.SetTabWidth(4)
         self.editor.StyleSetSpec(wx.stc.STC_STYLE_DEFAULT,
-                'back:black,face:%s,size:%s' % (font.FaceName, font.PointSize))
+                'face:%s,size:%s' % (font.FaceName, font.PointSize))
         ## colorizer
         self.initColorizer()
     ## init colorizer
     def initColorizer(self):
         ## comment style
         self.style_COMMENT = 1
-        self.editor.StyleSetSpec(self.style_COMMENT,'back:black,fore:darkcyan')
+        self.editor.StyleSetSpec(self.style_COMMENT,'fore:grey')
         ## number style
         self.style_NUMBER = 2
-        self.editor.StyleSetSpec(self.style_NUMBER,'back:black,fore:cyan')
+        self.editor.StyleSetSpec(self.style_NUMBER,'fore:darkgreen')
         ## defoperator
         self.style_DEFOP = 3
-        self.editor.StyleSetSpec(self.style_DEFOP,'back:black,fore:#880000')
+        self.editor.StyleSetSpec(self.style_DEFOP,'fore:red')
         ## operator
         self.style_OP = 4
-        self.editor.StyleSetSpec(self.style_OP,'back:black,fore:#000088')
+        self.editor.StyleSetSpec(self.style_OP,'fore:darkcyan')
         ## string literal
         self.style_STRING = 5
-        self.editor.StyleSetSpec(self.style_STRING,'back:black,fore:#880088')
+        self.editor.StyleSetSpec(self.style_STRING,'fore:darkblue')
         ## constant literal
         self.style_CONST = 6
-        self.editor.StyleSetSpec(self.style_STRING,'back:black,fore:#008888')
+        self.editor.StyleSetSpec(self.style_CONST,'fore:brown')
         # bind colorizer event
         self.editor.Bind(wx.stc.EVT_STC_STYLENEEDED,self.onStyle)
     ## colorizer styling event callback
