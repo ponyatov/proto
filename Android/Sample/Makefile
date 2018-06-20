@@ -43,8 +43,7 @@ AAPACK	= $(AAPT) package -f -m -M $(MANIFEST) -S $(RES) -I $(JAR)
 DEX		= $(HOME)/Android/Sdk/build-tools/26.0.2/dx
 DEXDUMP	= $(HOME)/Android/Sdk/build-tools/26.0.2/dexdump
 
-build: apk
-#R class dex apk
+build: R class dex apk
 R:
 	$(AAPACK) -J $(SRC) 
 class:
