@@ -18,7 +18,7 @@ MANIFEST	= $(MAIN)/AndroidManifest.xml
 JA_MAIN		= $(JA)/MainActivity.java
 LA_MAIN 	= $(LAYOUT)/activity_main.xml
 
-default: build
+default: go
 
 src: dirs Makefile $(MANIFEST) $(JA_MAIN) $(LA_MAIN)
 
@@ -34,6 +34,7 @@ $(JA_MAIN): ../Sample/$(JA)/$(PACK)/sample/MainActivity.java Makefile
 $(LAYOUT)/activity_main.xml: ../Sample/$(LAYOUT)/activity_main.xml Makefile
 	cat $< | sed "s/ponyatov\.sample/\Lponyatov.$(APP)/g" > $@
 
+ADB		= $(HOME)/Android/Sdk/platform-tools/adb
 SDK		= $(HOME)/Android/Sdk/build-tools/26.0.2
 AAPT	= $(SDK)/aapt
 AALIST	= $(AAPT) list 
@@ -54,6 +55,11 @@ dex:
 apk: $(BIN)/$(APP_LOW).apk
 $(BIN)/$(APP_LOW).apk: $(BIN)/$(APP_LOW).unaligned.apk
 	$(SDK)/zipalign -f 4 $< $@ ; echo ; $(AALIST) $@
-$(BIN)/$(APP_LOW).unaligned.apk: $(BIN)/classes.dex Makefile
+$(BIN)/$(APP_LOW).unaligned.apk: $(BIN)/classes.dex
 	$(AAPACK) -F $@
 	cp $< classes.dex && $(AAPT) add $@ classes.dex && rm classes.dex 
+
+go: $(BIN)/$(APP_LOW).apk
+	$(ADB) install $<
+	
+	
