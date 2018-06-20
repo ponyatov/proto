@@ -238,12 +238,6 @@ class Function(Active):
 ## Virtual Machine command
 class VM(Function): pass
 
-## operator
-class Operator(Active): pass
-
-## definition operator (shuld have different colorizing in editor)
-class DefOperator(Operator): pass
-
 ## colon definition (executable vector)
 class ColonDef(Active):
     ## @warning inherited via `__init__` from `Vector` (mixin alike)
@@ -259,13 +253,24 @@ class ColonDef(Active):
 ## @}
 
 
-## @defgroup s1meta Meta
-## @brief metaprogramming
+## @defgroup meta Meta
+## @brief Metaprogramming types and objects
 ## @{
-
+         
+## metaprogramming
 class Meta(Qbject): pass
 
-class Comment(Meta): pass
+## comment
+class Comment(Meta,String):
+    ## dump head in linear string format
+    def str(self): return String.str(self)
+
+## operator
+class Operator(Meta): pass
+
+## definition operator (compiler words)
+## shuld have different colorizing in editor
+class DefOperator(Operator): pass
 
 ## @}
 
@@ -333,7 +338,7 @@ ABOUT  = '''
 README = '''
 # %s
 ## %s
-### ask for lessons how to reimplement it to know deep in use
+### <a href="http://ponyatov.quora.com/">Follow my blog</a> on Quora about it
  
 (c) %s <<%s>>, %s
 
@@ -346,11 +351,12 @@ github: %s
 
 W['MODULE']  = String(MODULE)
 W['TITLE']   = String(TITLE)
+W['ABOUT']   = String(ABOUT)
 W['AUTHOR']  = String(AUTHOR)
 W['LICENCE'] = String(LICENCE)
 W['GITHUB']  = String(GITHUB)
 W['MANUAL']  = String(MANUAL)
-W['ABOUT']   = String(ABOUT)
+W['README']  = String(README)
 
 W['STAGE']   = Number(re.findall(r'S(\d)\.py$',sys.argv[0])[0])
 

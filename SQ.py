@@ -1,23 +1,3 @@
- 
-## @defgroup meta Meta
-## @brief Metaprogramming types and active objects
-## @{
-         
-## metaprogramming
-class Meta(Qbject): pass
- 
-## comment
-class Comment(Meta,String):
-    ## dump head in linear string format
-    def head(self,prefix): return String.head(self,prefix)
- 
-## operator
-class Operator(Meta): pass
- 
-## definition operator (compiler words)
-class DefOperator(Operator): pass
- 
-## @}
      
 ## @}
  
