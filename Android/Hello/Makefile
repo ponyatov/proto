@@ -51,9 +51,9 @@ class:
 	$(SRC)/$(PACK)/$(APP_LOW)/*.java
 dex:
 	$(DEX) --dex --output=$(BIN)/classes.dex $(OBJ)
-apk: $(BIN)/$(APP).apk
-$(BIN)/$(APP).apk: $(BIN)/$(APP).unaligned.apk
+apk: $(BIN)/$(APP_LOW).apk
+$(BIN)/$(APP_LOW).apk: $(BIN)/$(APP_LOW).unaligned.apk
 	$(SDK)/zipalign -f 4 $< $@ ; echo ; $(AALIST) $@
-$(BIN)/$(APP).unaligned.apk: $(BIN)/classes.dex Makefile
+$(BIN)/$(APP_LOW).unaligned.apk: $(BIN)/classes.dex Makefile
 	$(AAPACK) -F $@
 	cp $< classes.dex && $(AAPT) add $@ classes.dex && rm classes.dex 
