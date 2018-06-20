@@ -4,6 +4,7 @@ APP_LOW	= $(shell echo $(APP) | sed 's/\(.*\)/\L\1/')
 
 SRC		= $(CWD)/src
 OBJ		= $(CWD)/obj
+BIN		= $(CWD)/bin
 
 PACK	= io/github/ponyatov
 
@@ -22,7 +23,7 @@ default: dirs build
 src: dirs Makefile $(MANIFEST) $(JA_MAIN) $(LA_MAIN)
 
 dirs:
-	mkdir -p $(JA) $(RES) $(LAYOUT) $(VALUES) $(SRC)/$(PACK) $(OBJ)
+	mkdir -p $(JA) $(RES) $(LAYOUT) $(VALUES) $(SRC)/$(PACK) $(OBJ) $(BIN)
 
 Makefile: ../Sample/Makefile
 	cp $< $@
@@ -35,9 +36,14 @@ $(LAYOUT)/activity_main.xml: ../Sample/$(LAYOUT)/activity_main.xml Makefile
 
 AAPT	= $(HOME)/Android/Sdk/build-tools/26.0.2/aapt
 JAR		= $(HOME)/Android/Sdk/platforms/android-9/android.jar
+DEX		= $(HOME)/Android/Sdk/build-tools/26.0.2/dx
+DEXDUMP	= $(HOME)/Android/Sdk/build-tools/26.0.2/dexdump
 
-build:
-#	$(AAPT) package -f -m -J $(SRC) -M $(MANIFEST) -S $(RES) -I $(JAR)
+build: R class dex
+R:
+	$(AAPT) package -f -m -J $(SRC) -M $(MANIFEST) -S $(RES) -I $(JAR)
+class:
 	javac -d obj -classpath src -bootclasspath $(JAR) \
 	$(SRC)/$(PACK)/$(APP_LOW)/*.java
-
+dex:
+	$(DEX) --dex --output=$(BIN)/classes.dex $(OBJ)
