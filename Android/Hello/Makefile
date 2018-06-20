@@ -18,7 +18,7 @@ MANIFEST	= $(MAIN)/AndroidManifest.xml
 JA_MAIN		= $(JA)/MainActivity.java
 LA_MAIN 	= $(LAYOUT)/activity_main.xml
 
-default: dirs build
+default: build
 
 src: dirs Makefile $(MANIFEST) $(JA_MAIN) $(LA_MAIN)
 
@@ -34,16 +34,27 @@ $(JA_MAIN): ../Sample/$(JA)/$(PACK)/sample/MainActivity.java Makefile
 $(LAYOUT)/activity_main.xml: ../Sample/$(LAYOUT)/activity_main.xml Makefile
 	cat $< | sed "s/ponyatov\.sample/\Lponyatov.$(APP)/g" > $@
 
-AAPT	= $(HOME)/Android/Sdk/build-tools/26.0.2/aapt
+SDK		= $(HOME)/Android/Sdk/build-tools/26.0.2
+AAPT	= $(SDK)/aapt
+AALIST	= $(AAPT) list 
 JAR		= $(HOME)/Android/Sdk/platforms/android-9/android.jar
+AAPACK	= $(AAPT) package -f -m -M $(MANIFEST) -S $(RES) -I $(JAR)
+
 DEX		= $(HOME)/Android/Sdk/build-tools/26.0.2/dx
 DEXDUMP	= $(HOME)/Android/Sdk/build-tools/26.0.2/dexdump
 
-build: R class dex
+build: apk
+#R class dex apk
 R:
-	$(AAPT) package -f -m -J $(SRC) -M $(MANIFEST) -S $(RES) -I $(JAR)
+	$(AAPACK) -J $(SRC) 
 class:
 	javac -d obj -classpath src -bootclasspath $(JAR) \
 	$(SRC)/$(PACK)/$(APP_LOW)/*.java
 dex:
 	$(DEX) --dex --output=$(BIN)/classes.dex $(OBJ)
+apk: $(BIN)/$(APP).apk
+$(BIN)/$(APP).apk: $(BIN)/$(APP).unaligned.apk
+	$(SDK)/zipalign -f 4 $< $@ ; echo ; $(AALIST) $@
+$(BIN)/$(APP).unaligned.apk: $(BIN)/classes.dex Makefile
+	$(AAPACK) -F $@
+	cp $< classes.dex && $(AAPT) add $@ classes.dex && rm classes.dex 
