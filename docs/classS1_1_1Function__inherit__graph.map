@@ -1,4 +1,5 @@
 <map id="S1.Function" name="S1.Function">
-<area shape="rect" id="node2" href="$classS1_1_1Active.html" title="S1.Active" alt="" coords="12,80,91,107"/>
+<area shape="rect" id="node4" href="$classS1_1_1VM.html" title="Virtual Machine command. " alt="" coords="20,229,83,256"/>
+<area shape="rect" id="node2" href="$classS1_1_1Active.html" title="Objects has executable semantics. " alt="" coords="12,80,91,107"/>
 <area shape="rect" id="node3" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="11,5,91,32"/>
 </map>

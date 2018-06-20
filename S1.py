@@ -187,29 +187,74 @@ class Binary(Integer):
 
 
 ## @defgroup container Container
-## @brief objects targeted for data holding
+## @brief Objects targeted for data holding: can contain nested data elements
 ## @{
 
-class Container(Qbject): pass
+## data container
+class Container(Qbject):
+    ## drop all elements
+    def dropall(self): del self.nest[:]
 
+## LIFO stack
 class Stack(Container): pass
 
-class Map(Container): pass
+## ordered vector (list)
+class Vector(Container): pass
+
+## associative array (vocabulary)
+class Map(Container):
+    ## `<<` operator
+    def __lshift__(self,o):
+        self.attr[o.__name__] = VM(o)
+        return self
+    ## @return keys
+    def keys(self): return self.attr.keys()
 
 ## @}
 
 
-## @defgroup s1active Active
-## @brief objects with executable semantics
+## @defgroup active Active
+## @brief Objects has executable semantics
 ## @{
-
+ 
+## Objects has executable semantics
 class Active(Qbject): pass
 
-class Function(Active): pass
+## function
+class Function(Active):
+    ## wraps Python function
+    ## @param[in] F function will be wrapped
+    ## @param[in] immed immediate function will be executed in COMPILE mode
+    ## @param[in] doc docstring
+    def __init__(self, F, immed=False, doc=''):
+        Active.__init__(self, F.__name__, doc=doc)
+        ## wrap function
+        self.fn = F
+        ## immediate flag
+        self.immed = immed
+    ## implement callable via wrapped function call
+    def __call__(self): return self.fn()
 
+## Virtual Machine command
+class VM(Function): pass
+
+## operator
 class Operator(Active): pass
 
+## definition operator (shuld have different colorizing in editor)
 class DefOperator(Operator): pass
+
+## colon definition (executable vector)
+class ColonDef(Active):
+    ## @warning inherited via `__init__` from `Vector` (mixin alike)
+    ## @param[in] V definition FORTH word name 
+    ## @param[in] immed immediate flag can be set @see Function
+    def __init__(self, V, immed=False):
+        Active.__init__(self,V)
+        ## override `immed` flag
+        self.immed = immed
+    ## @todo execute colondef
+    def __call__(self): raise BaseException(self)
 
 ## @}
 

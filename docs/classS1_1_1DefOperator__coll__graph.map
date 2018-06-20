@@ -1,5 +1,5 @@
 <map id="S1.DefOperator" name="S1.DefOperator">
-<area shape="rect" id="node2" href="$classS1_1_1Operator.html" title="S1.Operator" alt="" coords="16,155,108,181"/>
-<area shape="rect" id="node3" href="$classS1_1_1Active.html" title="S1.Active" alt="" coords="23,80,101,107"/>
+<area shape="rect" id="node2" href="$classS1_1_1Operator.html" title="operator " alt="" coords="16,155,108,181"/>
+<area shape="rect" id="node3" href="$classS1_1_1Active.html" title="Objects has executable semantics. " alt="" coords="23,80,101,107"/>
 <area shape="rect" id="node4" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="22,5,102,32"/>
 </map>

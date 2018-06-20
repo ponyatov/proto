@@ -1,5 +1,6 @@
 <map id="S1.Container" name="S1.Container">
-<area shape="rect" id="node3" href="$classS1_1_1Map.html" title="S1.Map" alt="" coords="5,155,72,181"/>
-<area shape="rect" id="node4" href="$classS1_1_1Stack.html" title="S1.Stack" alt="" coords="97,155,173,181"/>
-<area shape="rect" id="node2" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="47,5,127,32"/>
+<area shape="rect" id="node3" href="$classS1_1_1Map.html" title="associative array (vocabulary) " alt="" coords="5,155,72,181"/>
+<area shape="rect" id="node4" href="$classS1_1_1Stack.html" title="LIFO stack. " alt="" coords="97,155,173,181"/>
+<area shape="rect" id="node5" href="$classS1_1_1Vector.html" title="ordered vector (list) " alt="" coords="197,155,277,181"/>
+<area shape="rect" id="node2" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="95,5,175,32"/>
 </map>
