@@ -1,7 +1,0 @@
-<map id="S1.GUI" name="S1.GUI">
-<area shape="rect" id="node3" href="$classS1_1_1Editor.html" title="editor widget (Scintilla wrapper) " alt="" coords="5,155,81,181"/>
-<area shape="rect" id="node4" href="$classS1_1_1Frame.html" title="window " alt="" coords="105,155,184,181"/>
-<area shape="rect" id="node5" href="$classS1_1_1IDE.html" title="IDE window (base GUI widget in micro IDE) " alt="" coords="208,155,273,181"/>
-<area shape="rect" id="node6" href="$classS1_1_1Menu.html" title="menu " alt="" coords="298,155,373,181"/>
-<area shape="rect" id="node2" href="$classS1_1_1Qbject.html" title="base object class, such named for avoiding Python3 interference with Object " alt="" coords="153,5,233,32"/>
-</map>

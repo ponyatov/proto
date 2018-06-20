@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['github',['GITHUB',['../group__s2meta.html#ga6ce2c5e7c35b0b8183970d937f90f48d',1,'S1']]]
+  ['immed',['immed',['../classS0_1_1Qbject.html#aac2fcf5cef5e89ea17c83c5135041bb7',1,'S0::Qbject']]]
 ];

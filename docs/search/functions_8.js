@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['head',['head',['../classS0_1_1Qbject.html#a752960f50ff465780f7b1460e85c5725',1,'S0.Qbject.head()'],['../classS1_1_1Qbject.html#ae000e8d0a2f98c0882bbbef651ea5e65',1,'S1.Qbject.head()']]]
+  ['interpret',['INTERPRET',['../group__interpret0.html#ga9d2bb0ca1dd24f28a54239ab54153f5c',1,'S0']]]
 ];

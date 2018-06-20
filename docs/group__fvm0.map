@@ -1,0 +1,10 @@
+<map id="oFORTH Virtual Machine" name="oFORTH Virtual Machine">
+<area shape="rect" id="node1" href="$group__fileio0.html" title="minimal i/o for target files writing " alt="" coords="376,5,441,32"/>
+<area shape="rect" id="node2" href="$group__compiler.html" title="Active objects constructor, not machine code " alt="" coords="371,56,446,83"/>
+<area shape="rect" id="node3" href="$group__stage0.html" title="minimal codegenerator S0 &#45;&gt; S1.py " alt="" coords="5,173,72,200"/>
+<area shape="rect" id="node4" href="$group__stack.html" title="Data stack and base\l operators" alt="" coords="337,107,480,149"/>
+<area shape="rect" id="node5" href="$group__meta0.html" title="Meta" alt="" coords="383,173,434,200"/>
+<area shape="rect" id="node7" href="$group__interpret0.html" title="object FORTH script " alt="" coords="368,224,449,251"/>
+<area shape="rect" id="node8" href="$group__voc0.html" title="Vocabulary" alt="" coords="365,275,452,301"/>
+<area shape="rect" id="node9" href="$group__debug.html" title="minimal debug (stack/vocabulary dump) " alt="" coords="379,325,439,352"/>
+</map>

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['number',['Number',['../classS0_1_1Number.html',1,'S0']]],
-  ['number',['Number',['../classS1_1_1Number.html',1,'S1']]]
+  ['primitive',['Primitive',['../classS0_1_1Primitive.html',1,'S0.Primitive'],['../classS1_1_1Primitive.html',1,'S1.Primitive']]]
 ];

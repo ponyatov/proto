@@ -1,3 +1,4 @@
 <map id="Container" name="Container">
-<area shape="rect" id="node2" href="$group__sym.html" title="Symbolic class system" alt="" coords="5,5,164,32"/>
+<area shape="rect" id="node2" href="$group__sym.html" title="Generic types class system (metaprogramming and symbolic computations) " alt="" coords="5,5,164,32"/>
+<area shape="rect" id="node3" href="$group__sym0.html" title="Symbolic class system" alt="" coords="5,56,164,83"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="S1.Operator" name="S1.Operator">
 <area shape="rect" id="node2" href="$classS1_1_1Active.html" title="S1.Active" alt="" coords="12,80,91,107"/>
-<area shape="rect" id="node3" href="$classS1_1_1Qbject.html" title="base object class, such named for avoiding Python3 interference with Object " alt="" coords="11,5,91,32"/>
+<area shape="rect" id="node3" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="11,5,91,32"/>
 </map>

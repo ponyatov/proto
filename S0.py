@@ -9,7 +9,7 @@ import os,sys
 ## source code
 SRC = open(sys.argv[0]+'.src','r').read()
 
-## @defgroup sym Symbolic class system
+## @defgroup sym0 Symbolic class system
 ## @{
 
 ## base object class, such named for avoiding Python3 interference with `Object`
@@ -82,7 +82,7 @@ class Qbject:
     ## python code generator
     def py(self): return str(self.value)
     
-## @defgroup prim Primitive
+## @defgroup prim0 Primitive
 ## @{
 
 ## primitive machine-level types
@@ -149,7 +149,7 @@ class Vector(Container):
 
 ## @}
 
-## @defgroup active Active
+## @defgroup active0 Active
 ## @{
 
 ## objects with **executable semantics**
@@ -174,7 +174,7 @@ class Method(Function): pass
 
 ## @}
 
-## @defgroup s0io IO
+## @defgroup io0 IO
 ## @brief reduced support for file writing (for code autogen) 
 ## @{
 
@@ -206,14 +206,14 @@ class Dir(IO):
 
 ## @}
 
-## @defgroup lexer Syntax parser /lexer only/
+## @defgroup lexer0 Syntax parser /lexer only/
 ## @brief powered by PLY library (c) David Beazley <<dave@dabeaz.com>>
 ## @{
 
 import ply.lex as lex
 
 ## token types list:
-## all names must correspond to lowercased literal names in the @ref sym 
+## all names must correspond to lowercased literal names in the @ref sym0
 tokens = ['symbol','string','integer']
 
 ## extra lexer states
@@ -269,10 +269,10 @@ lexer = lex.lex()
 
 ## @}
 
-## @defgroup fvm oFORTH Virtual Machine
+## @defgroup fvm0 oFORTH Virtual Machine
 ## @{
 
-## @defgroup voc Vocabulary
+## @defgroup voc0 Vocabulary
 ## @{
 
 ## main vocabulary
@@ -314,7 +314,7 @@ W['.'] = VM(dot)
 
 ## @}
 
-## @defgroup fileio File I/O
+## @defgroup fileio0 File I/O
 ## minimal i/o for target files writing
 ## @{
 
@@ -327,7 +327,7 @@ W << FILE
 
 ## @}
 
-## @defgroup meta Meta
+## @defgroup meta0 Meta
 ## @{
 
 W['STAGE'] = Integer(0)
@@ -354,7 +354,7 @@ W[']'] = VM(rq,immed=True)
 
 ## @}
 
-## @defgroup interpret Interpreter
+## @defgroup interpret0 Interpreter
 ## @brief <b>`o`</b>bject FORTH script
 ## @{
 

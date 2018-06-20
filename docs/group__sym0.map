@@ -1,0 +1,7 @@
+<map id="Symbolic class system" name="Symbolic class system">
+<area shape="rect" id="node1" href="$group__container.html" title="objects targeted for data holding " alt="" coords="327,5,405,32"/>
+<area shape="rect" id="node3" href="$group__io0.html" title="reduced support for file writing (for code autogen) " alt="" coords="347,56,385,83"/>
+<area shape="rect" id="node5" href="$group__prim0.html" title="Primitive" alt="" coords="329,107,403,133"/>
+<area shape="rect" id="node6" href="$group__active0.html" title="Active" alt="" coords="337,157,395,184"/>
+<area shape="rect" id="node4" href="$group__stage0.html" title="minimal codegenerator S0 &#45;&gt; S1.py " alt="" coords="5,81,72,108"/>
+</map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getvalue',['GetValue',['../classS1_1_1Editor.html#a7b21eeb7dab6fc9bda2ea1671f985154',1,'S1::Editor']]]
+  ['head',['head',['../classS0_1_1Qbject.html#a706d7693caf04f7e72d6bb08f42f0de4',1,'S0.Qbject.head()'],['../classS1_1_1Qbject.html#a40c0a7b726e86eb03347cca636c1b47b',1,'S1.Qbject.head()']]]
 ];

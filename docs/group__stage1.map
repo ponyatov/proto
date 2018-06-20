@@ -1,7 +1,5 @@
 <map id="Stage 1" name="Stage 1">
-<area shape="rect" id="node1" href="$group__s1fvm.html" title="FORTH&#45;inspired stack engine based on OOP /no addressable memory/. " alt="" coords="120,5,289,32"/>
-<area shape="rect" id="node2" href="$group__s2meta.html" title="metaprogramming " alt="" coords="169,56,241,83"/>
-<area shape="rect" id="node3" href="$group__s1gui.html" title="light set of GUI view/controllers and micro/IDE " alt="" coords="181,107,228,133"/>
-<area shape="rect" id="node4" href="$group__s1sym.html" title="symbolic in the sense of computer algebra " alt="" coords="125,157,284,184"/>
-<area shape="rect" id="node5" href="$group__s1lexer.html" title="powered with PLY library (c) David M Beazley " alt="" coords="153,208,256,235"/>
+<area shape="rect" id="node1" href="$group__sym.html" title="Generic types class system (metaprogramming and symbolic computations) " alt="" coords="125,5,284,32"/>
+<area shape="rect" id="node3" href="$group__metainfo.html" title="Project info. " alt="" coords="147,56,262,83"/>
+<area shape="rect" id="node4" href="$group__fvm.html" title="FORTH&#45;inspired stack engine based on OOP /no addressable memory/. " alt="" coords="120,107,289,133"/>
 </map>

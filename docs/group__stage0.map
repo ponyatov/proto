@@ -1,5 +1,5 @@
 <map id="Stage 0" name="Stage 0">
-<area shape="rect" id="node1" href="$group__sym.html" title="Symbolic class system" alt="" coords="125,5,284,32"/>
-<area shape="rect" id="node3" href="$group__fvm.html" title="oFORTH Virtual Machine" alt="" coords="120,56,289,83"/>
-<area shape="rect" id="node4" href="$group__lexer.html" title="powered by PLY library (c) David Beazley &lt;dave@dabeaz.com&gt; " alt="" coords="135,107,274,149"/>
+<area shape="rect" id="node1" href="$group__sym0.html" title="Symbolic class system" alt="" coords="125,5,284,32"/>
+<area shape="rect" id="node3" href="$group__fvm0.html" title="oFORTH Virtual Machine" alt="" coords="120,56,289,83"/>
+<area shape="rect" id="node4" href="$group__lexer0.html" title="powered by PLY library (c) David Beazley &lt;dave@dabeaz.com&gt; " alt="" coords="135,107,274,149"/>
 </map>

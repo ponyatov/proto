@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['editor',['editor',['../classS1_1_1Editor.html#a49b2d86a67ec6706df7c33fd097255de',1,'S1::Editor']]]
+  ['fh',['fh',['../classS0_1_1File.html#ac5169bd54be3b2bdb85c0367a152f298',1,'S0::File']]],
+  ['fn',['fn',['../classS0_1_1VM.html#a59a67d876c34ab891b7321a84381bee9',1,'S0::VM']]]
 ];

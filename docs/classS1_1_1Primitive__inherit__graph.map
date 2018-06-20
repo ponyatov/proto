@@ -2,6 +2,6 @@
 <area shape="rect" id="node3" href="$classS1_1_1Number.html" title="number " alt="" coords="5,155,93,181"/>
 <area shape="rect" id="node5" href="$classS1_1_1String.html" title="string " alt="" coords="118,155,194,181"/>
 <area shape="rect" id="node6" href="$classS1_1_1Symbol.html" title="symbol/atom " alt="" coords="218,155,305,181"/>
-<area shape="rect" id="node2" href="$classS1_1_1Qbject.html" title="base object class, such named for avoiding Python3 interference with Object " alt="" coords="116,5,196,32"/>
+<area shape="rect" id="node2" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="116,5,196,32"/>
 <area shape="rect" id="node4" href="$classS1_1_1Integer.html" title="integer number " alt="" coords="8,229,91,256"/>
 </map>
