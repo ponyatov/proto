@@ -35,6 +35,6 @@ AAPT	= $(HOME)/Android/Sdk/build-tools/26.0.2/aapt
 JAR		= $(HOME)/Android/Sdk/platforms/android-9/android.jar
 
 build:
-	$(AAPT) package -f -m -J $(SRC) -M $(MANIFEST) -S $(RES) -I $(JAR)
+	$(AAPT) package -m -J $(SRC) -M $(MANIFEST) -S $(RES) -I $(JAR)
 
 

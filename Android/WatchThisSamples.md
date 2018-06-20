@@ -1,4 +1,8 @@
 
+## develop without Studio
+
+https://medium.com/@authmane512/how-to-build-an-apk-from-command-line-without-ide-7260e1e22676
+
 ## Terminal Window Style
 
 https://github.com/jackpal/Android-Terminal-Emulator
@@ -8,7 +12,6 @@ https://github.com/jackpal/Android-Terminal-Emulator
 http://www.linuxjournal.com/article/10940
 
 http://www.tutorialspoint.com/sl4a/sl4a_development_environment.htm
-
 
 ## Phones tested
 
