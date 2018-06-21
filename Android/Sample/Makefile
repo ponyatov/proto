@@ -62,6 +62,6 @@ $(BIN)/$(APP_LOW).unaligned.apk: $(BIN)/classes.dex
 go: $(BIN)/$(APP_LOW).apk
 	$(ADB) install $<
 	
-key: ../ponyatov.keystore
-../ponyatov.keystore:
+key: ../android.keystore
+../android.keystore:
 	keytool -genkeypair -validity 365 -keystore $@ -keyalg RSA -keysize 2048
