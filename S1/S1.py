@@ -183,15 +183,6 @@ import pickle
 IMAGE = sys.argv[0] + '.image'
 W['IMAGE'] = String(IMAGE)
 
-## backup vocabulary to `.image`
-def BACKUP():
-    # filter vocabulary ignoring all functions (VM commands) 
-    B = {}
-    for i in W.keys():
-        if W[i].type not in ['vm','function']: B[i] = W[i]
-    F = open(IMAGE,'wb') ; pickle.dump(B,F) ; F.close()
-W << BACKUP
-
 ## restore from vocabulary  `.image`
 def RESTORE():
     global W
@@ -204,20 +195,7 @@ W << RESTORE
 ## @}
 ## @}
 
-## @defgroup s1lexer Syntax parser
-## @brief powered with
-## <a href="http://ponyatov.quora.com/Text-data-formats-Parsing-with-Python-and-PLY-library">PLY library</a>
-## `(c) David M Beazley` 
-## @{
-
-import ply.lex  as lex
-import ply.yacc as yacc
-
 ## @}
 
 ## @}
 
-## @}
-
-
-print W

@@ -267,45 +267,18 @@ class DefOperator(Operator): pass
     
 ## @}
 
-## @defgroup persist persistent storage
-## @brief store system state in `.image` file
-## @ingroup voc
-## @{ 
-
-import pickle
-
-## image file name
-IMAGE = sys.argv[0] + '.image'
-
-## backup vocabulary to `.image`
-def backup():
-    B = {}
-    # filter vocabulary ignoring all functions (VM commands) 
-    for i in W.keys():
-        if W[i].type not in ['function']: B[i] = W[i]
-    F = open(IMAGE,'wb') ; pickle.dump(B,F) ; F.close()
-
-## restore from vocabulary  `.image`
-def restore():
-    global W
-    try: F = open(IMAGE,'rb') ; B = pickle.load(F) ; F.close()
-    except IOError: B = {}
-    # override all elements from image
-    for i in B: W[i] = B[i]
-
-## @}
-
 ## @defgroup forth oFORTH
 ## @brief object FORTH interpreter
 ## @{
 
 ## @defgroup parser Syntax parser
 ## @brief powered with
-## <a href="http://www.dabeaz.com/ply/ply.html">PLY library</a>
-## @details (c) David M. Beazley 
+## <a href="http://ponyatov.quora.com/Text-data-formats-Parsing-with-Python-and-PLY-library">PLY library</a>
+## `(c) David M Beazley` 
 ## @{
 
-import ply.lex as lex
+import ply.lex  as lex
+import ply.yacc as yacc
 
 ## token types binded with @ref qbject
 ## @details Every Qbject type can be matched by regexp in string form
@@ -434,12 +407,35 @@ D = Stack('DATA')
 ## system vocabulary
 
 W = Voc('FORTH')
-# try: W = restore('FORTH')
-# except IOError:
-#     W = Voc('FORTH')
-#     W << WORD << FIND << INTERPRET
-#     W['.'] = Function(dot)
-#     backup(W)
+
+## @defgroup persist persistent storage
+## @brief store system state in `.image` file
+## @{ 
+
+import pickle
+
+## image file name
+IMAGE = sys.argv[0] + '.image'
+
+## backup vocabulary to `.image`
+def BACKUP():
+    B = {}
+    # filter vocabulary ignoring all functions (VM commands) 
+    for i in W.keys():
+        if W[i].type not in ['vm','function']: B[i] = W[i]
+    F = open(IMAGE,'wb') ; pickle.dump(B,F) ; F.close()
+W << BACKUP
+
+## restore from vocabulary  `.image`
+def RESTORE():
+    global W
+    try: F = open(IMAGE,'rb') ; B = pickle.load(F) ; F.close()
+    except IOError: B = {}
+    # override all elements from image
+    for i in B: W[i] = B[i]
+W << RESTORE
+
+## @}
 
 ## @}
 
@@ -701,7 +697,7 @@ class Editor(wx.Frame):
             F = open(self.Title,'r') ; self.editor.SetValue(F.read()) ; F.close()
         except IOError: pass # no file
     ## backup (hybernation)
-    def onBackup(self,e): backup()
+    def onBackup(self,e): BACKUP()
 
 ## main window
 main = Editor(None, title = sys.argv[0] + '.src') ; main.Show()
@@ -777,7 +773,7 @@ W['STAGE']   = Number(re.findall(r'S(\d)\.py$',sys.argv[0])[0])
 ## @}
 
 if __name__ == '__main__':
-    restore()
+    RESTORE()
     forth_thread.start()
     gui_thread.start()
     gui_thread.join()
