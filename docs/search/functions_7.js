@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['head',['head',['../classS0_1_1Qbject.html#a706d7693caf04f7e72d6bb08f42f0de4',1,'S0.Qbject.head()'],['../classS1_1_1Qbject.html#a40c0a7b726e86eb03347cca636c1b47b',1,'S1.Qbject.head()']]]
+  ['initcolorizer',['initColorizer',['../classS1_1_1Editor.html#abc6d7da651ee6e9a021eb4d17c096db3',1,'S1::Editor']]],
+  ['initeditor',['initEditor',['../classS1_1_1Editor.html#a667087e0d43d3e7caf3cf41e4f9475a9',1,'S1::Editor']]],
+  ['initmenu',['initMenu',['../classS1_1_1Editor.html#a0d7da8c9436926c598717946883a110d',1,'S1::Editor']]],
+  ['interpret',['INTERPRET',['../group__interpret.html#ga6a6bbcf8c3a48e3deb79029a5a1c5d1b',1,'S1']]]
 ];

@@ -1,5 +1,0 @@
-<map id="Stage 1" name="Stage 1">
-<area shape="rect" id="node1" href="$group__sym.html" title="Generic types class system (metaprogramming and symbolic computations) " alt="" coords="125,5,284,32"/>
-<area shape="rect" id="node3" href="$group__metainfo.html" title="Project info. " alt="" coords="147,56,262,83"/>
-<area shape="rect" id="node4" href="$group__fvm.html" title="FORTH&#45;inspired stack engine based on OOP /no addressable memory/. " alt="" coords="120,107,289,133"/>
-</map>

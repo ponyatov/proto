@@ -1,14 +1,13 @@
 var searchData=
 [
-  ['d',['D',['../group__stack.html#ga965189c99469e3d497b05b0d0e690521',1,'S0.D()'],['../group__fvm.html#gacdf159fc2440dbe77744ab97cee6fb17',1,'S1.D()']]],
-  ['debug',['Debug',['../group__debug.html',1,'']]],
-  ['def',['DEF',['../group__compiler.html#ga4883bc5808d8beb2a5633b8a3a180429',1,'S0']]],
+  ['d',['D',['../group__stack.html#ga05398dc8cf39a2c0965301a66e276c68',1,'S1']]],
+  ['debug',['debug',['../classS1_1_1Editor.html#ae92d89014db84543c167d921878b2731',1,'S1.Editor.debug()'],['../group__debug.html',1,'(Global Namespace)']]],
   ['defoperator',['DefOperator',['../classS1_1_1DefOperator.html',1,'S1']]],
-  ['dir',['Dir',['../classS0_1_1Dir.html',1,'S0']]],
-  ['dot',['dot',['../group__debug.html#gafd822f710262033658e21c74b07d7c6a',1,'S0']]],
-  ['drop',['drop',['../classS1_1_1Qbject.html#afd2629856f46f177ddc8c24f4b793863',1,'S1::Qbject']]],
-  ['dropall',['dropall',['../classS1_1_1Container.html#a662a285bc095ec45946e1be50ad2ae35',1,'S1::Container']]],
-  ['dump',['dump',['../classS0_1_1Qbject.html#a977b01d2557654afcf0715e338aa07f3',1,'S0.Qbject.dump()'],['../classS1_1_1Qbject.html#ab4e6bdd9b3d7ad63d8220f1a27a3da29',1,'S1.Qbject.dump()']]],
-  ['dumped',['dumped',['../classS0_1_1Qbject.html#a3fcf8913b293109198e913e270b22c24',1,'S0.Qbject.dumped()'],['../classS1_1_1Qbject.html#a3c2ea9cf9661b240af80daf2444f8ec5',1,'S1.Qbject.dumped()']]],
-  ['data_20stack_20and_20base_20operators',['Data stack and base operators',['../group__stack.html',1,'']]]
+  ['display',['displaY',['../group__gui.html#ga827777d05afe2f09b7260dedc786f512',1,'S1']]],
+  ['dot',['dot',['../group__debug.html#gac688fedb0f63f3334965e52027b3ebd5',1,'S1']]],
+  ['drop',['drop',['../classS1_1_1Qbject.html#a31da610c5eb06d97ac753f91f9097a92',1,'S1::Qbject']]],
+  ['dropall',['dropall',['../classS1_1_1Container.html#a1d329fbdeb91405af319f63fd286f54d',1,'S1::Container']]],
+  ['dump',['dump',['../classS1_1_1Qbject.html#af97d0923e1be928c9e3fb7ddd80f02c9',1,'S1::Qbject']]],
+  ['dumped',['dumped',['../classS1_1_1Qbject.html#a3c2ea9cf9661b240af80daf2444f8ec5',1,'S1::Qbject']]],
+  ['data_20stack',['Data stack',['../group__stack.html',1,'']]]
 ];

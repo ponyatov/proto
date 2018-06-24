@@ -1,7 +1,0 @@
-<map id="S0.Active" name="S0.Active">
-<area shape="rect" id="node3" href="$classS0_1_1Clazz.html" title="class definition/constructor " alt="" coords="5,155,81,181"/>
-<area shape="rect" id="node4" href="$classS0_1_1Function.html" title="function " alt="" coords="105,155,197,181"/>
-<area shape="rect" id="node2" href="$classS0_1_1Qbject.html" title="base object class, such named for avoiding Python3 interference with Object " alt="" coords="57,5,137,32"/>
-<area shape="rect" id="node5" href="$classS0_1_1Method.html" title="class method " alt="" coords="59,229,145,256"/>
-<area shape="rect" id="node6" href="$classS0_1_1VM.html" title="virtual machine command: void function(void) works on data stack " alt="" coords="169,229,232,256"/>
-</map>

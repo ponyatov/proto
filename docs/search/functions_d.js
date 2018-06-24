@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['restore',['RESTORE',['../group__persist.html#gade83207f4ba368ad585df04e69b369b4',1,'S1']]],
-  ['rq',['rq',['../group__compiler.html#gab92ff4657eb62452177883e53645b648',1,'S0']]]
+  ['semicolon',['semicolon',['../group__compiler.html#ga52c208617db7418d1ac72dc1386b04a2',1,'S1']]],
+  ['str',['str',['../classS1_1_1Qbject.html#aacc8cdd31844016a97a6558c9869034f',1,'S1::Qbject']]]
 ];

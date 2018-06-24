@@ -1,9 +1,6 @@
-### prototype knowledge database implementation
-### stage 1 /full sized/
+## Stage 1 test suite
 
--01 +02.30 -4e+5 0xDeadBeef 0b1101		\ numbers
+: init ( -- ) nop ;						\ empty colon definition
+: recurse ( -- ) recurse init recurse ;	\ recursive definition (head/tail)
 
-'s\tring\nwith escapes'
-
-: none ( -- ) ;							\ colon def
-: recurse ( -- ) none recurse none ;	\ recursion
+'s\t\ri\ng' -01 +02.3 -0.4e+05 0xDeadBeef 0b1101	\ numbers
