@@ -763,8 +763,16 @@ github: %s
 %s
 ''' % (MODULE, TITLE, AUTHOR, EMAIL, LICENSE, ABOUT, GITHUB, ABOUT)
 
+W['MODULE']  = String(MODULE)
+W['TITLE']   = String(TITLE)
+W['ABOUT']   = String(ABOUT)
+W['AUTHOR']  = String(AUTHOR)
+W['LICENCE'] = String(LICENCE)
+W['GITHUB']  = String(GITHUB)
+W['MANUAL']  = String(MANUAL)
+W['README']  = String(README)
 
-
+W['STAGE']   = Number(re.findall(r'S(\d)\.py$',sys.argv[0])[0])
 
 ## @}
 
