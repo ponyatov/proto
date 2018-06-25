@@ -123,24 +123,24 @@ class Qbject:
 ## @defgroup prim Primitive
 ## @brief primitive computer types (evaluates to itself)
 ## @{
-    
-## primitive
+
+## primitive machine-level types
 class Primitive(Qbject): pass
 
-## symbol
+## symbol/atom
 class Symbol(Primitive): pass
 
 ## string
 class String(Primitive):
-    ## dump string in linear format
-    def head(self,prefix):
-        S = '%s<%s:\'' % (prefix, self.type)
+    ## linear `string` representation with escapes
+    def str(self):
+        S = '\''
         for c in self.value:
             if c == '\n': S += '\\n'
             elif c == '\r': S += '\\r'
             elif c == '\t': S += '\\t'
             else: S += c
-        return S+'\'>'
+        return S+'\''
 
 ## number
 class Number(Primitive):
@@ -166,9 +166,8 @@ class Hex(Integer):
         ## convert with `base=16`
         self.value = int(V[2:],0x10)
     ## hex number print
-    def head(self, prefix):
-        return '%s<%s:0x%X>' % (prefix, self.type, self.value)
-
+    ## @returns string value in `0x[0-9A-F]+` form
+    def str(self): return '0x%X' % self.value
 
 ## machine binary
 class Binary(Integer):
@@ -178,19 +177,17 @@ class Binary(Integer):
         ## convert with `base=2`
         self.value = int(V[2:],0x02)
     ## binary number print
-    def head(self, prefix):
-        return '%s<%s:%s>' % (prefix, self.type, '0b{0:b}'.format(self.value))
+    ## @returns string value in `0b[01]+` form
+    def str(self): return '0b{0:b}'.format(self.value)
     
 ## @}
 
 ## @defgroup container Container
-## @brief Objects can contain nested data elements
+## @brief Objects targeted for data holding: can contain nested data elements
 ## @{
 
 ## data container
 class Container(Qbject):
-    ## inherit init from `Qbject`
-    def __init__(self,V): Qbject.__init__(self, V)
     ## drop all elements
     def dropall(self): del self.nest[:]
 

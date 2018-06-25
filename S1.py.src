@@ -4,3 +4,6 @@
 : recurse ( -- ) recurse init recurse ;	\ recursive definition (head/tail)
 
 's\t\ri\ng' -01 +02.3 -0.4e+05 0xDeadBeef 0b1101	\ numbers
+
+.													\ clean up after tests
+
