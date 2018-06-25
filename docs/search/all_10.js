@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['q',['q',['../group__debug.html#gae5439bb374543b37aa7ec620c8a25d81',1,'S0']]],
-  ['qbject',['Qbject',['../classS1_1_1Qbject.html',1,'S1.Qbject'],['../classS0_1_1Qbject.html',1,'S0.Qbject'],['../group__qbject.html',1,'(Global Namespace)']]],
-  ['qq',['qq',['../group__debug.html#ga7e91ca7b1d65f9d60a1d5259a4ec4952',1,'S0']]],
-  ['quote',['quote',['../group__interpret0.html#gaf79defa10680b1b30d79db630a78f765',1,'S0']]]
+  ['q',['Q',['../group__queue.html#ga15b7eaf642988d0b4df80099011e1535',1,'S1']]],
+  ['qbject',['Qbject',['../group__qbject.html',1,'']]],
+  ['qbject',['Qbject',['../classS1_1_1Qbject.html',1,'S1']]],
+  ['quit',['quit',['../classS1_1_1Editor.html#a4192b40d7d793e6f099848c473904482',1,'S1::Editor']]]
 ];

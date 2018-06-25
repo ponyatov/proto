@@ -1,5 +1,5 @@
 <map id="S1.String" name="S1.String">
 <area shape="rect" id="node4" href="$classS1_1_1Comment.html" title="comment " alt="" coords="5,229,104,256"/>
-<area shape="rect" id="node2" href="$classS1_1_1Primitive.html" title="primitive machine&#45;level types " alt="" coords="8,80,101,107"/>
+<area shape="rect" id="node2" href="$classS1_1_1Primitive.html" title="primitive " alt="" coords="8,80,101,107"/>
 <area shape="rect" id="node3" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="15,5,95,32"/>
 </map>

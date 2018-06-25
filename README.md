@@ -13,17 +13,13 @@ github: https://github.com/ponyatov/proto
 
 ### Stage 0
 
-@ref stage0
-
 * has minimal @ref sym tree limited only for
 * dumb source code file generation for next gen version /Python/
 * `S0.py.src` file contains source code in oFORTH OML (object manipulation language) creates next-gen system implementation
 
 ### Stage 1 /TODO/
 
-@ref stage1
-
-* <b>metaprogramming system</b> implemented in Python using <b>autogen</b>erated code by @ref stage0
+* <b>metaprogramming system</b> implemented in Python using <b>autogen</b>erated code by stage0
 * <b>single node</b> implementation with
 * <b>simple IDE/GUI</b> using wxPython and
 * HTTP <b>web backend</b> engine

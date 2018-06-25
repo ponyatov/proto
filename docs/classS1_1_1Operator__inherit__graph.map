@@ -1,5 +1,5 @@
 <map id="S1.Operator" name="S1.Operator">
-<area shape="rect" id="node4" href="$classS1_1_1DefOperator.html" title="definition operator (compiler words) shuld have different colorizing in editor " alt="" coords="5,229,119,256"/>
+<area shape="rect" id="node4" href="$classS1_1_1DefOperator.html" title="definition operator (compiler words) " alt="" coords="5,229,119,256"/>
 <area shape="rect" id="node2" href="$classS1_1_1Meta.html" title="metaprogramming " alt="" coords="27,80,97,107"/>
 <area shape="rect" id="node3" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="22,5,102,32"/>
 </map>

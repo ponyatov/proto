@@ -58,7 +58,7 @@ sg9
 sg11
 S'prototype knowledge database implementation'
 p26
-sbsS'IMAGE'
+sbsS'AUTHOR'
 p27
 (i__main__
 String
@@ -74,9 +74,9 @@ p31
 sg9
 (dp32
 sg11
-S'/home/dpon/proto/S1.py.image'
+S'Dmitry Ponyatov'
 p33
-sbsS'AUTHOR'
+sbsS'MANUAL'
 p34
 (i__main__
 String
@@ -92,9 +92,9 @@ p38
 sg9
 (dp39
 sg11
-S'Dmitry Ponyatov'
+S'Quora blog: http://www.quora.com/profile/Dmitry-Ponyatov/all_posts'
 p40
-sbsS'MANUAL'
+sbsS'MODULE'
 p41
 (i__main__
 String
@@ -110,9 +110,9 @@ p45
 sg9
 (dp46
 sg11
-S'Quora blog: http://www.quora.com/profile/Dmitry-Ponyatov/all_posts'
+S'proto'
 p47
-sbsS'MODULE'
+sbsS'LICENCE'
 p48
 (i__main__
 String
@@ -128,9 +128,9 @@ p52
 sg9
 (dp53
 sg11
-S'proto'
+S'All rights reserved'
 p54
-sbsS'LICENCE'
+sbsS'README'
 p55
 (i__main__
 String
@@ -146,12 +146,12 @@ p59
 sg9
 (dp60
 sg11
-S'All rights reserved'
+S'\n# proto\n## prototype knowledge database implementation\n### <a href="http://ponyatov.quora.com/">Follow my blog</a> on Quora about it\n \n(c) Dmitry Ponyatov <<dponyatov@gmail.com>>, All rights reserved\n\n\n\n \ngithub: https://github.com/ponyatov/proto\n \n\n\n'
 p61
-sbsS'README'
+sbsS'STAGE'
 p62
 (i__main__
-String
+Number
 p63
 (dp64
 g4
@@ -159,28 +159,10 @@ I00
 sg5
 (lp65
 sg7
-S'string'
+S'number'
 p66
 sg9
 (dp67
-sg11
-S'\n# proto\n## prototype knowledge database implementation\n### <a href="http://ponyatov.quora.com/">Follow my blog</a> on Quora about it\n \n(c) Dmitry Ponyatov <<dponyatov@gmail.com>>, All rights reserved\n\n\n\n \ngithub: https://github.com/ponyatov/proto\n \n\n\n'
-p68
-sbsS'STAGE'
-p69
-(i__main__
-Number
-p70
-(dp71
-g4
-I00
-sg5
-(lp72
-sg7
-S'number'
-p73
-sg9
-(dp74
 sg11
 F1.0
 sbs.

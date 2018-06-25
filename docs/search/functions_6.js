@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['file',['FILE',['../group__fileio0.html#gad70eda834bc99e5315369d9cc24a58bf',1,'S0']]],
-  ['find',['FIND',['../group__interpret0.html#ga5582ab98d54a0459eeef7745454de026',1,'S0']]]
+  ['head',['head',['../classS1_1_1Qbject.html#ae000e8d0a2f98c0882bbbef651ea5e65',1,'S1.Qbject.head()'],['../classS1_1_1String.html#a44fdd7e213d7a540a2a97173e542a951',1,'S1.String.head()'],['../classS1_1_1Hex.html#a193bebc31530945ea68a9503249e41a0',1,'S1.Hex.head()'],['../classS1_1_1Binary.html#ae38161aac2ee1ca406a7a8e74efd4073',1,'S1.Binary.head()'],['../classS1_1_1Comment.html#a5511280ba4dad41de27bfdc0d06e141d',1,'S1.Comment.head()']]]
 ];
