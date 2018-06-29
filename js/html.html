@@ -1,7 +1,15 @@
+<!--  D3js graph visualization frontend -->
 <html manifest="cache.manifest">
-<title>D3js graph visualization frontend</title>
+<title>PROTO/js</title>
 <link rel="icon" href="logo.png" type="image/png">
 <script src="d3.v3.min.js"></script>
+
+<script>
+window.ononline = function () {
+	document.body.style.backgroundColor ='#002200'; }
+window.onoffline = function () {
+	document.body.style.backgroundColor ='#220000'; }
+</script>
 
 <style>
 
@@ -22,6 +30,7 @@ body {
 #pad {
 	width:100%; 
 	position: absolute; bottom: 0; left: 0;
+	white-space: nowrap;
 }
 
 </style>
@@ -68,4 +77,12 @@ console log
 <textarea id=pad rows=5 placeholder="# enter your commands here">
 # comment
 
+'s\t\ri\ng'
+-01 +02.3 -0.4e+05 0xDeadBeef 0b1101    \ numbers
+
+: init ( -- ) nop ;       \ empty colon definition
+: recurse ( -- )
+  recurse init recurse ;  \ recursive definition (head/tail)
+
+.                         \ clean up after tests
 </textarea>
