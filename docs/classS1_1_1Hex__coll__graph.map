@@ -1,6 +1,0 @@
-<map id="S1.Hex" name="S1.Hex">
-<area shape="rect" id="node2" href="$classS1_1_1Integer.html" title="integer " alt="" coords="11,229,93,256"/>
-<area shape="rect" id="node3" href="$classS1_1_1Number.html" title="number " alt="" coords="8,155,96,181"/>
-<area shape="rect" id="node4" href="$classS1_1_1Primitive.html" title="primitive " alt="" coords="5,80,99,107"/>
-<area shape="rect" id="node5" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="12,5,92,32"/>
-</map>

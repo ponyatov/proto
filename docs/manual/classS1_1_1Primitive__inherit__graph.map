@@ -1,0 +1,10 @@
+<map id="S1.Primitive" name="S1.Primitive">
+<area shape="rect" id="node3" href="$classS1_1_1Number.html" title="number " alt="" coords="50,155,138,181"/>
+<area shape="rect" id="node7" href="$classS1_1_1String.html" title="string " alt="" coords="167,155,243,181"/>
+<area shape="rect" id="node9" href="$classS1_1_1Symbol.html" title="symbol/atom " alt="" coords="267,155,353,181"/>
+<area shape="rect" id="node2" href="$classS1_1_1Qbject.html" title="base Qbject class, such named for avoiding Python3 interference with Object " alt="" coords="165,5,245,32"/>
+<area shape="rect" id="node4" href="$classS1_1_1Integer.html" title="integer " alt="" coords="51,229,134,256"/>
+<area shape="rect" id="node5" href="$classS1_1_1Binary.html" title="machine binary " alt="" coords="5,304,84,331"/>
+<area shape="rect" id="node6" href="$classS1_1_1Hex.html" title="machine hex " alt="" coords="109,304,175,331"/>
+<area shape="rect" id="node8" href="$classS1_1_1Comment.html" title="comment " alt="" coords="158,229,257,256"/>
+</map>

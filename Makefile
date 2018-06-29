@@ -1,2 +1,2 @@
 doxy:
-	rm -rf docs ; doxygen doxy.gen >/dev/null
+	rm -rf docs/manual ; doxygen doxy.gen >/dev/null

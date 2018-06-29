@@ -1,0 +1,6 @@
+<map id="S1.Qbject.__repr__" name="S1.Qbject.__repr__">
+<area shape="rect" id="node2" href="$classS1_1_1Qbject.html#ab4e6bdd9b3d7ad63d8220f1a27a3da29" title="dump any object in full tree form (with infty recursion blocked) " alt="" coords="188,31,304,57"/>
+<area shape="rect" id="node3" href="$classS1_1_1Qbject.html#ab02c07363368939ffede796f1cd72b88" title="left padding for treee output " alt="" coords="355,5,461,32"/>
+<area shape="rect" id="node4" href="$classS1_1_1Qbject.html#a40c0a7b726e86eb03347cca636c1b47b" title="dump object in short form (header only) " alt="" coords="352,56,464,83"/>
+<area shape="rect" id="node5" href="$classS1_1_1Qbject.html#a871229f34f373a0927c64552797b5447" title="value in string representation to be overrided (can be differ from value for complex objects) ..." alt="" coords="512,56,611,83"/>
+</map>

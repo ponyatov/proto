@@ -1,5 +1,0 @@
-<map id="S1.Qbject.dump" name="S1.Qbject.dump">
-<area shape="rect" id="node2" href="$classS1_1_1Qbject.html#aa3036aa9cec620154f03ce54ebc57117" title="left padding for treee output " alt="" coords="173,5,278,32"/>
-<area shape="rect" id="node3" href="$classS1_1_1Qbject.html#ae000e8d0a2f98c0882bbbef651ea5e65" title="dump object in short form (header only) " alt="" coords="169,56,281,83"/>
-<area shape="rect" id="node4" href="$classS1_1_1Qbject.html#aacc8cdd31844016a97a6558c9869034f" title="value in string representation to be overrided (can be differ from value for complex objects) ..." alt="" coords="329,56,428,83"/>
-</map>
