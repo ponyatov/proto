@@ -1,7 +1,12 @@
 <!--  D3js graph visualization frontend -->
 <html manifest="cache.manifest">
-<title>PROTO/js</title>
+
+<head>
+<link rel="manifest" href="/manifest.json">
 <link rel="icon" href="logo.png" type="image/png">
+</head>
+
+<title>PROTO/js</title>
 <script src="d3.v3.min.js"></script>
 
 <script>
@@ -10,6 +15,17 @@ window.onoffline = function () { document.body.style.backgroundColor ='#220000';
 </script>
 
 <script>
+
+function Qbject(T,V) {
+	return {
+		type: T,
+		value: V,
+		attr: {},
+		nest: []
+	}
+}
+
+sym = Qbject("type",'value')
 
 // data stack
 var D = [];
