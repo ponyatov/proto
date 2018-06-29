@@ -5,10 +5,21 @@
 <script src="d3.v3.min.js"></script>
 
 <script>
-window.ononline = function () {
-	document.body.style.backgroundColor ='#002200'; }
-window.onoffline = function () {
-	document.body.style.backgroundColor ='#220000'; }
+window.ononline  = function () { document.body.style.backgroundColor ='#002200'; }
+window.onoffline = function () { document.body.style.backgroundColor ='#220000'; }
+</script>
+
+<script>
+
+// data stack
+var D = [];
+
+function push(object)	{ D.push(object); return D; }
+function pop()			{ return D.pop(); }
+function _top()			{ return D[D.length-1]; }
+function dup()			{ return push(_top()); }
+function drop()			{ pop(); return D; }
+
 </script>
 
 <style>
