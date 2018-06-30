@@ -1,4 +1,10 @@
 {
 "name": "oKB/js",
-"icons": [{"src":"logo.png","type": "image/png"}]
+"icons": [
+	{"src":"logo.png", "sizes":"64x64", "type": "image/png"}
+],
+"start_url": "/proto/index.html",
+"display": "standalone",
+"background_color": "black",
+"theme_color": "black"
 }
