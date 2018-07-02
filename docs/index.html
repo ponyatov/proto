@@ -8,6 +8,7 @@
 
 <title>oKB/js</title>
 <script src="d3.v3.min.js"></script>
+<script src="peg-0.10.0.min.js"></script>
 
 <script>
 window.ononline  = function () { document.body.style.backgroundColor ='#003300'; }
@@ -35,6 +36,21 @@ function pop()			{ return D.pop(); }
 function _top()			{ return D[D.length-1]; }
 function dup()			{ return push(_top()); }
 function drop()			{ pop(); return D; }
+
+// interpreter
+
+var log =0;
+var pad =0;
+
+function INTERPRET(SRC) {
+	document.get
+	console.log(SRC)
+}
+
+window.onload = function() {
+	log = document.getElementById('log')
+	pad = document.getElementById('pad');
+}
 
 </script>
 
@@ -66,7 +82,7 @@ body {
 
 <a href="manual/index.html">DoxyGen manual</a>
 
-<pre id=log>
+<pre id=log onclick="INTERPRET(pad.value)">
 console log
 console log
 console log
@@ -113,7 +129,7 @@ console log
 
 : init ( -- ) nop ;       \ empty colon definition
 : recurse ( -- )
-  recurse init recurse ;  \ recursive definition (head/tail)
+  recurse init recurse ;  \ recursive definition
 
 .                         \ clean up after tests
 </textarea>
