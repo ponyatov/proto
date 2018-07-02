@@ -42,13 +42,18 @@ function drop()			{ pop(); return D; }
 var log =0;
 var pad =0;
 
+var parser = peg.generate("\
+	// oFORTH PEG grammar for PEG.js										\
+	
+	start = 
+");
+
 function INTERPRET(SRC) {
-	document.get
-	console.log(SRC)
+	//console.log(parser.parse(SRC))
 }
 
 window.onload = function() {
-	log = document.getElementById('log')
+	log = document.getElementById('log');
 	pad = document.getElementById('pad');
 }
 
