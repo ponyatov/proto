@@ -1,0 +1,5 @@
+#!/bin/sh
+wget -c https://bitbucket.org/pypy/pypy/downloads/pypy2-v6.0.0-src.zip
+unzip pypy2-v6.0.0-src.zip
+
+ln -fs pypy2-v6.0.0-src/rpython/bin/rpython r
