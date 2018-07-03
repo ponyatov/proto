@@ -23,7 +23,23 @@ def Persons(P):
     for i in P << 'Alpha': yield i
     for i in P << 'Beta' : yield i
     for i in P << 'Gamma': yield i
+    
+def generalGetValue(value):
+    if not isinstance(value, UniVar): return value  ## non-var
+    if not value._bound: return value               ## unbound var
+    return value._value                             ## bounded value
 
-P = UniVar() ; print P
-for p in Persons(P):
-    print p
+def generalUnify(arg1, arg2):
+    arg1val = generalGetValue(arg1)
+    arg2val = generalGetValue(arg2)
+    if isinstance(arg1val,UniVar):                  ## unbound arg1val
+        for i in arg1val << arg2val: yield i        ##   unify with arg2val
+    elif isinstance(arg2val, UniVar):               ## unbound arg2val
+        for j in arg2val << arg1val: yield j        ##   unify with arg1val
+    else:                                           ## both non-univars
+        if arg1val == arg2val: yield arg1val        ##   
+
+P = UniVar() ; print generalGetValue(P)
+for i in P << 'Beta':
+    print generalGetValue(i)
+print generalGetValue(123)
