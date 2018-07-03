@@ -1,10 +1,14 @@
-# bare Symbolic type system (Python only, no FORTH bindings)
+# bare Symbolic/Object VM (Python only, no FORTH bindings)
 
 import re
+
+## object pool
+IMAGE = []
 
 class Qbject:
 
     def __init__(self, V):
+        IMAGE.append(self)
         self.type = self.__class__.__name__.lower() ; self.value = V
 
     def __repr__(self):
@@ -52,3 +56,24 @@ def test_string():
     print S
     assert re.match(r'\n<string:\'string\'> @[0-9A-F]+',S.dump())
 
+class Container(Qbject): pass
+
+class Stack(Container): pass
+
+class Map(Container): pass
+
+class Vector(Container): pass
+
+class Active(Qbject): pass
+
+class VM(Active): pass
+
+def test_VM_empty():
+    V = VM('VM') ; print V
+    assert re.match(r'\n<vm:VM>',V.dump())
+
+
+def test_IMAGE_dump():
+    print IMAGE
+    assert 1==2
+    
