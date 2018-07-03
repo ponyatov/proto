@@ -1,0 +1,103 @@
+<html manifest="jS.manifest">
+<head>
+<title>jS.vm</title>
+<link rel="icon" href="logo.png" type="image/png">
+
+<style>
+* {
+	font-family: "Lucida Console", monospace; font-size: 5vmin;
+	border: .5vmin double white;
+	color: white; background-color: black;
+}
+
+body {
+	margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+}
+
+#log {
+}
+
+#pad {
+	width: 100%;
+	font-size: 3mm;
+	color: white; background-color: #000033;
+	position:absolute; bottom:0;
+}
+</style>
+
+</head>
+
+<pre id=stack>stack:data</pre>
+<pre id=words>map:words</pre>
+<pre id=log>
+log
+log
+log
+log
+log
+log
+log
+log
+log
+log
+log
+log
+log
+log
+log
+log
+log
+</pre>
+
+<textarea id=pad rows=5>
+# comment
+
+'s\t\ri\ng'
+-01 +02.3 -0.4e+05 0xDeadBeef 0b1101    \ numbers
+
+: init ( -- ) nop ;       \ empty colon definition
+: recurse ( -- )
+  recurse init recurse ;  \ recursive definition
+
+.                         \ clean up after tests
+</textarea>
+
+<script>
+
+D = []			// data stack
+
+var stack =0;	// data stack dump view
+
+function Sdump() {
+	stack.innerHTML = 'stack:data'; // D.toString();
+}
+
+W = {}			// vocabulary
+
+W["?"] = Sdump;
+
+var words =0;	// vocabulary dump view
+
+function WORDS() {
+	words.innerHTML = 'map:words\n';
+	for (i in W)
+		words.innerHTML += '  '+ i + ' -> '+typeof(W[i])+':'+W[i].name+'\n';
+}
+
+function HTML_update() {
+	Sdump(); WORDS();
+}
+
+function process() {
+	console.log(process);
+}
+
+window.onload = function() {
+	stack = document.getElementById('stack');
+	words = document.getElementById('words');
+	pad   = document.getElementById('pad'  );
+	pad.width = stack.width;
+	HTML_update();
+}
+
+</script>
